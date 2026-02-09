@@ -1,5 +1,9 @@
 import Navigation from '../components/common/Navigation'
+import CodeBlock from '../components/common/CodeBlock'
 import BroadcastingAnimator from '../components/visualizations/BroadcastingAnimator'
+import ShapePredictor from '../components/exercises/ShapePredictor'
+import MultipleChoice from '../components/exercises/MultipleChoice'
+import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
 
 export default function Broadcasting() {
@@ -54,6 +58,126 @@ export default function Broadcasting() {
             label="Beispiel 3: (3,4) + (3,) — Inkompatibel!"
           />
         </section>
+
+        {/* --- Theorie: Broadcasting-Regeln im Code --- */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Broadcasting-Regeln im Code</h2>
+          <p className="text-slate-600 mb-3">
+            Die drei Broadcasting-Regeln: (1) Arrays mit weniger Dimensionen werden links mit 1en aufgefüllt.
+            (2) Dimensionen der Größe 1 werden auf die größere Dimension gestreckt.
+            (3) Sind zwei Dimensionen weder gleich noch 1, gibt es einen Fehler.
+          </p>
+          <CodeBlock
+            title="Broadcasting am SmartEnergy-Beispiel"
+            code={`import numpy as np
+
+# Verbrauch: 100 Haushalte × 8760 Stunden
+verbrauch = np.random.uniform(5, 25, size=(100, 8760))
+
+# Stundenpreise: 8760 Werte (1D)
+preise = np.random.uniform(0.15, 0.45, size=(8760,))
+
+# Broadcasting: (100, 8760) * (8760,)
+# Schritt 1: preise wird zu (1, 8760)
+# Schritt 2: preise wird zu (100, 8760) gestreckt
+kosten = verbrauch * preise   # Shape: (100, 8760)
+
+# Spalten-Broadcasting mit reshape
+rabatt = np.array([0.9, 0.85, 0.95]).reshape(3, 1)
+# (3, 1) * (3, 4) → jede Zeile wird multipliziert
+matrix = np.ones((3, 4))
+print((rabatt * matrix).shape)  # (3, 4)`}
+          />
+        </section>
+
+        {/* --- Übung 1: ShapePredictor — Spalten-Broadcasting --- */}
+        <ShapePredictor
+          id="broadcast-shape-1"
+          title="Shape vorhersagen: Spalten-Broadcasting"
+          context="a = np.ones((3, 1))\nb = np.ones((1, 4))"
+          operation="ergebnis = a + b"
+          expectedShape={[3, 4]}
+          explanation="(3,1) + (1,4): Die 1er-Dimensionen werden jeweils gestreckt → Ergebnis (3,4)."
+        />
+
+        {/* --- Übung 2: ShapePredictor — SmartEnergy-Broadcasting --- */}
+        <ShapePredictor
+          id="broadcast-shape-2"
+          title="Shape vorhersagen: Preisberechnung"
+          context="verbrauch = np.ones((100, 8760))  # 100 Haushalte × 8760 Stunden\npreise = np.ones((8760,))           # Stundenpreise"
+          operation="kosten = verbrauch * preise"
+          expectedShape={[100, 8760]}
+          explanation="(100, 8760) * (8760,): preise wird zu (1, 8760) aufgefüllt, dann auf (100, 8760) gestreckt."
+        />
+
+        {/* --- Übung 3: Multiple Choice — Inkompatible Shapes --- */}
+        <MultipleChoice
+          id="broadcast-rules"
+          question="Welche Shape-Kombination ist NICHT kompatibel für Broadcasting?"
+          options={[
+            { text: '(3, 4) + (4,)', explanation: 'Kompatibel — (4,) wird zu (1, 4), dann auf (3, 4) gestreckt.' },
+            { text: '(3, 4) + (3, 1)', explanation: 'Kompatibel — die 1 in Spalte wird auf 4 gestreckt.' },
+            { text: '(3, 4) + (3,)', explanation: 'Richtig! (3,) wird zu (1, 3). Dann: 4 ≠ 3 und keins ist 1 → Fehler!' },
+            { text: '(5, 1) + (1, 3)', explanation: 'Kompatibel — beide 1er werden gestreckt → (5, 3).' },
+          ]}
+          correctIndex={2}
+        />
+
+        {/* --- Übung 4: CodingExercise — Preisberechnung --- */}
+        <CodingExercise
+          id="broadcasting-coding"
+          title="Stromkosten mit Broadcasting berechnen"
+          description="Berechne die Stromkosten für 5 Haushalte über 24 Stunden. Nutze Broadcasting, um die Stundenpreise (1D) auf alle Haushalte (2D) anzuwenden."
+          starterCode={`import numpy as np
+
+# 5 Haushalte × 24 Stunden Verbrauch (kWh)
+np.random.seed(42)
+verbrauch = np.random.uniform(5, 25, size=(5, 24))
+
+# Stundenpreise (Euro/kWh) — variiert über den Tag
+preise = np.array([
+    0.18, 0.16, 0.15, 0.15, 0.16, 0.20,  # 0-5 Uhr (günstig)
+    0.28, 0.35, 0.38, 0.36, 0.34, 0.32,  # 6-11 Uhr (teuer)
+    0.30, 0.28, 0.26, 0.25, 0.27, 0.32,  # 12-17 Uhr (mittel)
+    0.38, 0.40, 0.36, 0.30, 0.24, 0.20,  # 18-23 Uhr (Spitze)
+])
+
+# Berechne die Kosten pro Haushalt und Stunde mit Broadcasting
+kosten = # Dein Code hier
+print("Kosten-Shape:", kosten.shape)
+
+# Gesamtkosten pro Haushalt (Summe über axis=1)
+kosten_pro_haushalt = # Dein Code hier
+print("Kosten pro Haushalt:", np.round(kosten_pro_haushalt, 2))`}
+          solution={`import numpy as np
+
+np.random.seed(42)
+verbrauch = np.random.uniform(5, 25, size=(5, 24))
+
+preise = np.array([
+    0.18, 0.16, 0.15, 0.15, 0.16, 0.20,
+    0.28, 0.35, 0.38, 0.36, 0.34, 0.32,
+    0.30, 0.28, 0.26, 0.25, 0.27, 0.32,
+    0.38, 0.40, 0.36, 0.30, 0.24, 0.20,
+])
+
+kosten = verbrauch * preise
+print("Kosten-Shape:", kosten.shape)
+
+kosten_pro_haushalt = np.sum(kosten, axis=1)
+print("Kosten pro Haushalt:", np.round(kosten_pro_haushalt, 2))`}
+          validationCode={`assert kosten.shape == (5, 24), f"kosten.shape sollte (5, 24) sein, ist aber {kosten.shape}"
+assert kosten_pro_haushalt.shape == (5,), f"kosten_pro_haushalt.shape sollte (5,) sein, ist aber {kosten_pro_haushalt.shape}"
+# Check that broadcasting was used (not a loop)
+expected = verbrauch * preise
+assert np.allclose(kosten, expected), "kosten sollte verbrauch * preise sein (Broadcasting)"
+assert np.allclose(kosten_pro_haushalt, np.sum(kosten, axis=1)), "kosten_pro_haushalt sollte die Summe über axis=1 sein"
+print("Broadcasting korrekt angewendet!")`}
+          hints={[
+            'Broadcasting: verbrauch * preise — NumPy erkennt automatisch, dass preise (24,) zu (1, 24) und dann zu (5, 24) gestreckt werden muss.',
+            'Summe über Spalten: np.sum(kosten, axis=1) summiert jede Zeile → ein Wert pro Haushalt.',
+          ]}
+        />
       </main>
     </div>
   )
