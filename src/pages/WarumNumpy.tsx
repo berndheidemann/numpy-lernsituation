@@ -1,7 +1,10 @@
 import Navigation from '../components/common/Navigation'
+import Lueckentext from '../components/common/Lueckentext'
+import MultipleChoice from '../components/exercises/MultipleChoice'
 import CodingExercise from '../components/exercises/CodingExercise'
 import PerformanceChart from '../components/visualizations/PerformanceChart'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 const benchmarks = [
   { size: 1_000, listMs: 0.3, numpyMs: 0.02 },
@@ -13,11 +16,12 @@ const benchmarks = [
 
 export default function WarumNumpy() {
   useChapterTracking('warum-numpy')
+  const { createOnComplete } = useExerciseTracking('warum-numpy', 3)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 1: Warum NumPy?</h1>
         <p className="text-slate-600 mb-6">
           NumPy ist die Grundlage für numerische Berechnungen in Python. In diesem Kapitel lernst du,
@@ -37,10 +41,42 @@ export default function WarumNumpy() {
           />
         </section>
 
+        {/* --- Übung 1: MultipleChoice — Listen vs. Arrays --- */}
+        <MultipleChoice
+          id="listen-vs-arrays-quiz"
+          question="Was ist der Hauptgrund, warum NumPy-Arrays schneller sind als Python-Listen?"
+          onComplete={createOnComplete('listen-vs-arrays-quiz')}
+          options={[
+            { text: 'NumPy ist in Java geschrieben', explanation: 'Falsch — NumPy nutzt C und Fortran, nicht Java.' },
+            { text: 'Homogener Datentyp + zusammenhängender Speicher ermöglicht Vektorisierung', explanation: 'Richtig! Alle Elemente haben denselben Typ und liegen direkt hintereinander im Speicher — so kann die CPU ganze Blöcke gleichzeitig verarbeiten.' },
+            { text: 'Python-Listen unterstützen keine Zahlen', explanation: 'Falsch — Python-Listen können sehr wohl Zahlen speichern, nur nicht so effizient.' },
+            { text: 'NumPy nutzt mehrere Prozessorkerne automatisch', explanation: 'Falsch — Standard-NumPy nutzt in der Regel einen Kern. Der Vorteil kommt von Vektorisierung und C-optimiertem Code.' },
+          ]}
+          correctIndex={1}
+        />
+
+        {/* --- Übung 2: Lückentext — Vektorisierung --- */}
+        <Lueckentext
+          id="vektorisierung-lueckentext"
+          onComplete={createOnComplete('vektorisierung-lueckentext')}
+          segments={[
+            '# Mit Python-Listen: explizite Schleife\nergebnis = []\nfor x in liste:\n    ergebnis.append(x * 2)\n\n# Mit NumPy: ',
+            { id: 'konzept', answer: 'Vektorisierung', hint: 'Wie heißt das Konzept, bei dem eine Operation auf alle Elemente gleichzeitig angewendet wird?' },
+            '\nimport numpy as np\narr = np.',
+            { id: 'func', answer: 'array', hint: 'Welche Funktion erstellt ein NumPy-Array aus einer Liste?' },
+            '(liste)\nergebnis = arr ',
+            { id: 'op', answer: '*', hint: 'Welcher Operator multipliziert elementweise?' },
+            ' 2',
+          ]}
+        />
+
+        {/* --- Übung 3: CodingExercise — Erste Schritte --- */}
         <CodingExercise
           id="warum-numpy-1"
           title="Erste Schritte mit NumPy"
           description="Erstelle ein NumPy-Array und berechne die Summe aller Elemente. Nutze die Funktion np.sum()."
+          onComplete={createOnComplete('warum-numpy-1')}
+          fallbackOutput={"Array: [ 1  2  3  4  5  6  7  8  9 10]\nSumme: 55"}
           starterCode={`import numpy as np
 
 # Erstelle ein Array mit den Werten 1 bis 10

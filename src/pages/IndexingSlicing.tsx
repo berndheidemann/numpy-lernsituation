@@ -1,11 +1,14 @@
 import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
+import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import IndexingHighlighter from '../components/visualizations/IndexingHighlighter'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import MultipleChoice from '../components/exercises/MultipleChoice'
+import DragDropExercise from '../components/exercises/DragDropExercise'
 import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 const sampleData = [
   [10, 20, 30, 40, 50],
@@ -16,11 +19,12 @@ const sampleData = [
 
 export default function IndexingSlicing() {
   useChapterTracking('indexing-slicing')
+  const { createOnComplete } = useExerciseTracking('indexing-slicing', 9)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 3: Indexing & Slicing</h1>
         <p className="text-slate-600 mb-6">
           Mit Indexing (Elementzugriff) und Slicing (Teilbereich-Zugriff) greifst du gezielt
@@ -83,19 +87,77 @@ print(hohe_werte)`}
           />
         </section>
 
+        {/* --- Theorie: Negative Indices und Schrittweite --- */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Negative Indices und Schrittweite</h2>
+          <p className="text-slate-600 mb-3">
+            Negative Indices zählen vom Ende des Arrays. Der Index{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">-1</code> ist das letzte Element,{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">-2</code> das vorletzte usw.
+            Mit der <strong>Schrittweite</strong> (step) im Slicing{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">[start:stop:step]</code> kannst du
+            jedes n-te Element auswählen oder das Array umkehren.
+          </p>
+          <CodeBlock
+            title="Negative Indices und Schrittweite"
+            code={`import numpy as np
+
+preise = np.array([0.18, 0.22, 0.30, 0.35, 0.28, 0.20])
+
+# Negative Indices — vom Ende zählen
+print(preise[-1])     # 0.20 (letztes Element)
+print(preise[-3:])    # [0.35, 0.28, 0.20] (letzte 3)
+
+# Schrittweite
+print(preise[::2])    # [0.18, 0.30, 0.28] (jedes 2. Element)
+print(preise[::-1])   # [0.20, 0.28, 0.35, 0.30, 0.22, 0.18] (umgekehrt)
+
+# 2D mit Schrittweite: jede 2. Zeile und Spalte
+data = np.arange(16).reshape(4, 4)
+print(data[::2, ::2])  # [[0, 2], [8, 10]]`}
+          />
+        </section>
+
         {/* --- Übung 1: ArrayFill — Slicing-Ergebnis vorhersagen --- */}
         <ArrayFillExercise
           id="slicing-result-1"
           title="Slicing-Ergebnis vorhersagen"
           description="Was ergibt verbrauch[1:3, 2:4]? Fülle die fehlenden Werte aus. (Zeilen 1–2, Spalten 2–3 des obigen Arrays)"
+          onComplete={createOnComplete('slicing-result-1')}
           expected={[[33, 44], [36, 48]]}
           prefilled={[[null, null], [null, null]]}
         />
 
-        {/* --- Übung 2: Multiple Choice — View oder Kopie? --- */}
+        {/* --- Übung 2: ArrayFill — Negative Indices --- */}
+        <ArrayFillExercise
+          id="negative-indices-fill"
+          title="Negative Indices vorhersagen"
+          description="preise = [0.18, 0.22, 0.30, 0.35, 0.28, 0.20]. Was ergibt preise[-3:]? (Die letzten 3 Elemente)"
+          onComplete={createOnComplete('negative-indices-fill')}
+          expected={[[0.35, 0.28, 0.20]]}
+          prefilled={[[null, null, null]]}
+        />
+
+        {/* --- Übung 3: Lückentext — Slicing-Syntax --- */}
+        <Lueckentext
+          id="slicing-lueckentext"
+          onComplete={createOnComplete('slicing-lueckentext')}
+          segments={[
+            'import numpy as np\n\ndata = np.arange(24)\n\n# Jedes 2. Element auswählen\njedes_zweite = data[::',
+            { id: 'step', answer: '2', hint: 'Welche Schrittweite wählt jedes zweite Element?' },
+            ']\n\n# Array umkehren\numgekehrt = data[::',
+            { id: 'reverse', answer: '-1', hint: 'Welche Schrittweite kehrt die Reihenfolge um?' },
+            ']\n\n# Letzte 6 Elemente (mit negativem Index)\nletzte_6 = data[',
+            { id: 'neg', answer: '-6', hint: 'Ab welchem negativen Index beginnen die letzten 6 Elemente?' },
+            ':]',
+          ]}
+        />
+
+        {/* --- Übung 4: Multiple Choice — View oder Kopie? --- */}
         <MultipleChoice
           id="view-or-copy"
           question="Welche Indexing-Operation erzeugt eine Kopie (statt eines Views)?"
+          onComplete={createOnComplete('view-or-copy')}
           options={[
             { text: 'verbrauch[1:3, 2:4]', explanation: 'Falsch — Slicing erzeugt einen View. Änderungen am Slice ändern das Original!' },
             { text: 'verbrauch[[0, 2]]', explanation: 'Richtig! Fancy Indexing mit Integer-Arrays erzeugt immer eine Kopie.' },
@@ -105,11 +167,104 @@ print(hohe_werte)`}
           correctIndex={1}
         />
 
-        {/* --- Übung 3: CodingExercise — Haushalt-Daten extrahieren --- */}
+        {/* --- Theorie: Boolean Indexing im Detail --- */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Boolean Indexing im Detail</h2>
+          <p className="text-slate-600 mb-3">
+            Boolean Indexing (Masken-basierter Zugriff) funktioniert in drei Schritten:
+            (1) <strong>Vergleich</strong> erzeugt ein Boolean-Array (Maske), (2) <strong>Maske</strong> enthält{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">True</code>/<code className="text-sm bg-slate-100 px-1 rounded">False</code> für
+            jedes Element, (3) <strong>Indexing</strong> mit der Maske filtert nur die{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">True</code>-Elemente heraus.
+          </p>
+          <CodeBlock
+            title="Boolean Indexing Schritt für Schritt"
+            code={`import numpy as np
+
+verbrauch = np.array([12, 8, 15, 22, 18, 9, 14, 11, 7, 20])
+
+# Schritt 1: Vergleich erzeugt eine Boolean-Maske
+maske = verbrauch >= 15
+print("Maske:", maske)
+# [False, False, True, True, True, False, False, False, False, True]
+
+# Schritt 2: Maske als Index verwenden → nur True-Werte
+hoher_verbrauch = verbrauch[maske]
+print("Gefiltert:", hoher_verbrauch)  # [15, 22, 18, 20]
+
+# Kurzform: Vergleich direkt in den Index
+print(verbrauch[verbrauch >= 15])     # [15, 22, 18, 20]`}
+          />
+          <div className="mt-4">
+            <p className="text-sm text-slate-500 mb-2">Visualisierung: Grün markierte Elemente erfüllen die Bedingung (≥ 15):</p>
+            <ArrayVisualizer
+              data={[12, 8, 15, 22, 18, 9, 14, 11, 7, 20]}
+              label="verbrauch — Elemente ≥ 15 hervorgehoben"
+              highlighted={new Set(['0,2', '0,3', '0,4', '0,9'])}
+            />
+          </div>
+        </section>
+
+        {/* --- Übung 5: MultipleChoice — Boolean-Maske --- */}
+        <MultipleChoice
+          id="boolean-maske-mc"
+          question="Was ergibt np.array([10, 20, 30, 40]) > 25?"
+          onComplete={createOnComplete('boolean-maske-mc')}
+          options={[
+            { text: '[True, True, True, True]', explanation: 'Falsch — 10 und 20 sind nicht größer als 25.' },
+            { text: '[False, True, True, True]', explanation: 'Falsch — 20 ist nicht größer als 25.' },
+            { text: '[False, False, True, True]', explanation: 'Richtig! Nur 30 und 40 sind größer als 25.' },
+            { text: '[10, 20, 30, 40]', explanation: 'Falsch — ein Vergleich liefert immer ein Boolean-Array, keine Zahlen.' },
+          ]}
+          correctIndex={2}
+        />
+
+        {/* --- Übung 6: ArrayFill — Boolean Indexing Ergebnis --- */}
+        <ArrayFillExercise
+          id="boolean-mask-result"
+          title="Boolean Indexing Ergebnis vorhersagen"
+          description="verbrauch = [12, 8, 15, 22, 18, 9, 14, 11, 7, 20]. Was ergibt verbrauch[verbrauch >= 15]? Trage die gefilterten Werte ein."
+          onComplete={createOnComplete('boolean-mask-result')}
+          expected={[[15, 22, 18, 20]]}
+          prefilled={[[null, null, null, null]]}
+        />
+
+        {/* --- Übung 7: DragDrop — Indexing-Arten zuordnen --- */}
+        <DragDropExercise
+          id="indexing-arten-zuordnen"
+          title="Indexing-Arten zuordnen"
+          description="Ordne jeden Code-Ausdruck der passenden Indexing-Art zu."
+          onComplete={createOnComplete('indexing-arten-zuordnen')}
+          pairs={[
+            { itemId: 'code-basic', itemLabel: 'arr[2, 3]', zoneId: 'zone-basic', zoneLabel: 'Basic Indexing' },
+            { itemId: 'code-slicing', itemLabel: 'arr[1:4, ::2]', zoneId: 'zone-slicing', zoneLabel: 'Slicing' },
+            { itemId: 'code-fancy', itemLabel: 'arr[[0, 2, 4]]', zoneId: 'zone-fancy', zoneLabel: 'Fancy Indexing' },
+            { itemId: 'code-boolean', itemLabel: 'arr[arr > 10]', zoneId: 'zone-boolean', zoneLabel: 'Boolean Indexing' },
+          ]}
+        />
+
+        {/* --- Übung 8: Lückentext — Boolean Indexing --- */}
+        <Lueckentext
+          id="boolean-indexing-lueckentext"
+          onComplete={createOnComplete('boolean-indexing-lueckentext')}
+          segments={[
+            'import numpy as np\n\nverbrauch = np.array([8, 22, 15, 30, 5, 18])\n\n# Maske: alle Werte größer als 15\nmaske = verbrauch ',
+            { id: 'op', answer: '>', hint: 'Welcher Vergleichsoperator prüft „größer als"?' },
+            ' ',
+            { id: 'wert', answer: '15', hint: 'Über welchem Schwellwert soll gefiltert werden?' },
+            '\n\n# Gefilterte Werte extrahieren\nhoher_verbrauch = verbrauch[',
+            { id: 'var', answer: 'maske', hint: 'Welche Variable enthält die Boolean-Maske?' },
+            ']\nprint(hoher_verbrauch)  # [22 30 18]',
+          ]}
+        />
+
+        {/* --- Übung 9: CodingExercise — Haushalt-Daten extrahieren --- */}
         <CodingExercise
           id="indexing-coding"
           title="Haushalt-Daten extrahieren"
           description="Gegeben ist ein Verbrauchsarray von 4 Haushalten über 5 Stunden. Extrahiere: (1) den Verbrauch von Haushalt 2 in Stunde 3, (2) alle Werte von Haushalt 0, (3) alle Werte über 40 kWh mit Boolean Indexing."
+          onComplete={createOnComplete('indexing-coding')}
+          fallbackOutput={"Einzelwert: 48\nHaushalt 0: [10 20 30 40 50]\nHohe Werte: [44 50 48 55 60 52 65]"}
           starterCode={`import numpy as np
 
 verbrauch = np.array([

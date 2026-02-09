@@ -3,16 +3,19 @@ import CodeBlock from '../components/common/CodeBlock'
 import BroadcastingAnimator from '../components/visualizations/BroadcastingAnimator'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import MultipleChoice from '../components/exercises/MultipleChoice'
+import DragDropExercise from '../components/exercises/DragDropExercise'
 import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 export default function Broadcasting() {
   useChapterTracking('broadcasting')
+  const { createOnComplete } = useExerciseTracking('broadcasting', 5)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 5: Broadcasting</h1>
         <p className="text-slate-600 mb-6">
           Broadcasting (automatische Formanpassung) erlaubt es, Arrays mit unterschiedlichen Shapes zu
@@ -94,6 +97,7 @@ print((rabatt * matrix).shape)  # (3, 4)`}
         <ShapePredictor
           id="broadcast-shape-1"
           title="Shape vorhersagen: Spalten-Broadcasting"
+          onComplete={createOnComplete('broadcast-shape-1')}
           context="a = np.ones((3, 1))\nb = np.ones((1, 4))"
           operation="ergebnis = a + b"
           expectedShape={[3, 4]}
@@ -104,6 +108,7 @@ print((rabatt * matrix).shape)  # (3, 4)`}
         <ShapePredictor
           id="broadcast-shape-2"
           title="Shape vorhersagen: Preisberechnung"
+          onComplete={createOnComplete('broadcast-shape-2')}
           context="verbrauch = np.ones((100, 8760))  # 100 Haushalte × 8760 Stunden\npreise = np.ones((8760,))           # Stundenpreise"
           operation="kosten = verbrauch * preise"
           expectedShape={[100, 8760]}
@@ -114,6 +119,7 @@ print((rabatt * matrix).shape)  # (3, 4)`}
         <MultipleChoice
           id="broadcast-rules"
           question="Welche Shape-Kombination ist NICHT kompatibel für Broadcasting?"
+          onComplete={createOnComplete('broadcast-rules')}
           options={[
             { text: '(3, 4) + (4,)', explanation: 'Kompatibel — (4,) wird zu (1, 4), dann auf (3, 4) gestreckt.' },
             { text: '(3, 4) + (3, 1)', explanation: 'Kompatibel — die 1 in Spalte wird auf 4 gestreckt.' },
@@ -123,11 +129,27 @@ print((rabatt * matrix).shape)  # (3, 4)`}
           correctIndex={2}
         />
 
-        {/* --- Übung 4: CodingExercise — Preisberechnung --- */}
+        {/* --- Übung 4: DragDrop — Broadcasting-Kompatibilität --- */}
+        <DragDropExercise
+          id="broadcast-compatibility-dd"
+          title="Broadcasting-Ergebnis zuordnen"
+          description="Ordne jede Shape-Kombination dem korrekten Ergebnis-Shape zu."
+          onComplete={createOnComplete('broadcast-compatibility-dd')}
+          pairs={[
+            { itemId: 'pair-1', itemLabel: '(3,4) + (4,)', zoneId: 'result-1', zoneLabel: 'Ergebnis: (3, 4)' },
+            { itemId: 'pair-2', itemLabel: '(5,1) + (1,3)', zoneId: 'result-2', zoneLabel: 'Ergebnis: (5, 3)' },
+            { itemId: 'pair-3', itemLabel: '(2,3,4) + (4,)', zoneId: 'result-3', zoneLabel: 'Ergebnis: (2, 3, 4)' },
+            { itemId: 'pair-4', itemLabel: '(6,1) + (6,)', zoneId: 'result-4', zoneLabel: 'Ergebnis: Fehler!' },
+          ]}
+        />
+
+        {/* --- Übung 5: CodingExercise — Preisberechnung --- */}
         <CodingExercise
           id="broadcasting-coding"
           title="Stromkosten mit Broadcasting berechnen"
           description="Berechne die Stromkosten für 5 Haushalte über 24 Stunden. Nutze Broadcasting, um die Stundenpreise (1D) auf alle Haushalte (2D) anzuwenden."
+          onComplete={createOnComplete('broadcasting-coding')}
+          fallbackOutput={"Kosten-Shape: (5, 24)\nKosten pro Haushalt: [88.42 85.19 91.03 78.56 82.11]"}
           starterCode={`import numpy as np
 
 # 5 Haushalte × 24 Stunden Verbrauch (kWh)

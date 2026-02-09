@@ -7,14 +7,16 @@ import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 export default function ArrayOperationen() {
   useChapterTracking('array-operationen')
+  const { createOnComplete } = useExerciseTracking('array-operationen', 7)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 4: Array-Operationen</h1>
         <p className="text-slate-600 mb-6">
           NumPy-Arrays ermöglichen <strong>elementweise Operationen</strong> — jede Berechnung wird
@@ -136,6 +138,7 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
         <MultipleChoice
           id="logische-operatoren"
           question="Wie filtert man in NumPy alle Werte, die zwischen 10 und 25 liegen?"
+          onComplete={createOnComplete('logische-operatoren')}
           options={[
             { text: 'verbrauch > 10 and verbrauch < 25', explanation: 'Falsch — `and` funktioniert nicht mit Arrays! Es gibt einen ValueError.' },
             { text: '(verbrauch > 10) & (verbrauch < 25)', explanation: 'Richtig! Der bitweise &-Operator mit Klammern ist die korrekte Syntax.' },
@@ -145,11 +148,22 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
           correctIndex={1}
         />
 
-        {/* --- Übung 2: ArrayFill — axis=0 Ergebnis --- */}
+        {/* --- Übung 2: ArrayFill — Logische Verknüpfung + Filterung --- */}
+        <ArrayFillExercise
+          id="logische-verknuepfung-fill"
+          title="Logische Verknüpfung und Filterung"
+          description="verbrauch = [8, 22, 15, 30, 5, 18]. Was ergibt verbrauch[(verbrauch > 10) & (verbrauch < 25)]? Trage die gefilterten Werte ein."
+          onComplete={createOnComplete('logische-verknuepfung-fill')}
+          expected={[[22, 15, 18]]}
+          prefilled={[[null, null, null]]}
+        />
+
+        {/* --- Übung 3: ArrayFill — axis=0 Ergebnis --- */}
         <ArrayFillExercise
           id="axis-result"
           title="Aggregation mit axis=0 vorhersagen"
           description="Gegeben: verbrauch = [[10, 15, 12], [22, 18, 25], [7, 9, 6]]. Was ergibt np.sum(verbrauch, axis=0)? (Summe pro Spalte)"
+          onComplete={createOnComplete('axis-result')}
           expected={[[39, 42, 43]]}
           prefilled={[[null, null, null]]}
         />
@@ -158,6 +172,7 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
         <ShapePredictor
           id="aggregation-shape"
           title="Shape nach Aggregation vorhersagen"
+          onComplete={createOnComplete('aggregation-shape')}
           context="data = np.ones((5, 24))  # 5 Haushalte × 24 Stunden"
           operation="ergebnis = np.mean(data, axis=1)"
           expectedShape={[5]}
@@ -167,6 +182,7 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
         {/* --- Übung 4: Lückentext — Kosten berechnen --- */}
         <Lueckentext
           id="operationen-lueckentext"
+          onComplete={createOnComplete('operationen-lueckentext')}
           segments={[
             'import numpy as np\n\nverbrauch = np.array([[10, 15], [22, 18]])\npreise = np.array([0.28, 0.35])\n\n# Kosten = Verbrauch × Preise (Broadcasting)\nkosten = verbrauch ',
             { id: 'op', answer: '*', hint: 'Welcher Operator multipliziert elementweise?' },
@@ -178,11 +194,69 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
           ]}
         />
 
-        {/* --- Übung 5: CodingExercise — Stromkosten-Rechner --- */}
+        {/* --- Theorie-Hinweis: np.argmax / np.argmin --- */}
+        <p className="text-slate-600 mb-6 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r">
+          <strong>Tipp:</strong>{' '}
+          <code className="text-sm bg-slate-100 px-1 rounded">np.argmax()</code> und{' '}
+          <code className="text-sm bg-slate-100 px-1 rounded">np.argmin()</code> geben den <em>Index</em> des
+          größten bzw. kleinsten Wertes zurück — nicht den Wert selbst. Nützlich, um z.B. die Stunde mit dem
+          höchsten Verbrauch zu finden.
+        </p>
+
+        {/* --- Übung 6: CodingExercise — Filter + Aggregation --- */}
+        <CodingExercise
+          id="filter-aggregation-coding"
+          title="Filtern und Aggregieren"
+          description="Kombiniere Boolean Indexing mit Aggregation: (1) Filtere Spitzenwerte > 20, (2) berechne deren Durchschnitt, (3) finde Werte im mittleren Bereich (10–20) mit logischem &-Operator."
+          onComplete={createOnComplete('filter-aggregation-coding')}
+          fallbackOutput={"Spitzenwerte: [22 30 25]\nDurchschnitt Spitze: 25.67\nMittlerer Bereich: [12 15 18 14 11 20]"}
+          starterCode={`import numpy as np
+
+verbrauch = np.array([12, 8, 15, 22, 30, 5, 18, 25, 14, 11, 7, 20])
+
+# 1. Spitzenwerte: alle Werte > 20
+hoher_verbrauch = # Dein Code hier
+print("Spitzenwerte:", hoher_verbrauch)
+
+# 2. Durchschnitt der Spitzenwerte
+durchschnitt_spitze = # Dein Code hier
+print("Durchschnitt Spitze:", round(durchschnitt_spitze, 2))
+
+# 3. Mittlerer Bereich: 10 <= Wert <= 20 (logisches UND)
+mittlerer_bereich = # Dein Code hier
+print("Mittlerer Bereich:", mittlerer_bereich)`}
+          solution={`import numpy as np
+
+verbrauch = np.array([12, 8, 15, 22, 30, 5, 18, 25, 14, 11, 7, 20])
+
+hoher_verbrauch = verbrauch[verbrauch > 20]
+print("Spitzenwerte:", hoher_verbrauch)
+
+durchschnitt_spitze = np.mean(hoher_verbrauch)
+print("Durchschnitt Spitze:", round(durchschnitt_spitze, 2))
+
+mittlerer_bereich = verbrauch[(verbrauch >= 10) & (verbrauch <= 20)]
+print("Mittlerer Bereich:", mittlerer_bereich)`}
+          validationCode={`expected_hoch = np.array([22, 30, 25])
+assert np.array_equal(hoher_verbrauch, expected_hoch), f"hoher_verbrauch sollte [22, 30, 25] sein, ist aber {hoher_verbrauch}"
+assert abs(durchschnitt_spitze - np.mean(expected_hoch)) < 0.01, f"durchschnitt_spitze sollte {np.mean(expected_hoch):.2f} sein"
+expected_mittel = np.array([12, 15, 18, 14, 11, 20])
+assert np.array_equal(mittlerer_bereich, expected_mittel), f"mittlerer_bereich sollte {expected_mittel} sein"
+print("Filter und Aggregation korrekt!")`}
+          hints={[
+            'Spitzenwerte: verbrauch[verbrauch > 20]',
+            'Durchschnitt: np.mean(hoher_verbrauch)',
+            'Mittlerer Bereich: verbrauch[(verbrauch >= 10) & (verbrauch <= 20)] — Klammern um jede Bedingung!',
+          ]}
+        />
+
+        {/* --- Übung 7: CodingExercise — Stromkosten-Rechner --- */}
         <CodingExercise
           id="stromkosten-coding"
           title="Stromkosten-Rechner"
           description="Berechne für 4 Haushalte über 7 Tage: (1) die täglichen Kosten (Verbrauch × Preis), (2) die Gesamtkosten pro Haushalt, und (3) den Tag mit den höchsten Kosten (über alle Haushalte)."
+          onComplete={createOnComplete('stromkosten-coding')}
+          fallbackOutput={"Kosten-Shape: (4, 7)\nKosten pro HH: [27.38 31.42 22.15 28.06]\nTeuerster Tag: Index 4"}
           starterCode={`import numpy as np
 
 np.random.seed(42)

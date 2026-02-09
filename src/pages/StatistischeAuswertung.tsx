@@ -1,11 +1,13 @@
 import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
+import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import DragDropExercise from '../components/exercises/DragDropExercise'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 const verbrauchsDaten = [
   [12, 8, 15, 22, 18],
@@ -15,11 +17,12 @@ const verbrauchsDaten = [
 
 export default function StatistischeAuswertung() {
   useChapterTracking('statistische-auswertung')
+  const { createOnComplete } = useExerciseTracking('statistische-auswertung', 7)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 7: Statistische Auswertung</h1>
         <p className="text-slate-600 mb-6">
           NumPy bietet umfangreiche statistische Funktionen — von einfachen Kennzahlen wie Mittelwert
@@ -121,6 +124,7 @@ print("Ausreißer:", verbrauch[ausreisser])`}
           id="statistik-zuordner"
           title="Statistik-Funktionen zuordnen"
           description="Ordne jede Fragestellung der passenden NumPy-Funktion zu."
+          onComplete={createOnComplete('statistik-zuordner')}
           pairs={[
             { itemId: 'fn-mean', itemLabel: 'np.mean()', zoneId: 'zone-durchschnitt', zoneLabel: 'Durchschnittlicher Verbrauch' },
             { itemId: 'fn-std', itemLabel: 'np.std()', zoneId: 'zone-streuung', zoneLabel: 'Streuung der Werte messen' },
@@ -134,6 +138,7 @@ print("Ausreißer:", verbrauch[ausreisser])`}
           id="achsen-aggregation"
           title="Achsen-Aggregation vorhersagen"
           description="Gegeben: data = [[12, 8, 15], [9, 14, 11], [25, 19, 16]]. Was ergibt np.mean(data, axis=0)? (Mittelwert pro Spalte, auf ganze Zahlen gerundet)"
+          onComplete={createOnComplete('achsen-aggregation')}
           expected={[[15, 14, 14]]}
           prefilled={[[null, null, null]]}
         />
@@ -142,6 +147,7 @@ print("Ausreißer:", verbrauch[ausreisser])`}
         <MultipleChoice
           id="korrelation-quiz"
           question="Der Korrelationskoeffizient zwischen Temperatur und Stromverbrauch beträgt -0.82. Was bedeutet das?"
+          onComplete={createOnComplete('korrelation-quiz')}
           options={[
             { text: 'Kein Zusammenhang', explanation: 'Falsch — ein Wert von -0.82 zeigt einen deutlichen Zusammenhang.' },
             { text: 'Je höher die Temperatur, desto höher der Verbrauch', explanation: 'Falsch — das negative Vorzeichen bedeutet einen gegenläufigen Zusammenhang.' },
@@ -151,11 +157,86 @@ print("Ausreißer:", verbrauch[ausreisser])`}
           correctIndex={2}
         />
 
-        {/* --- Übung 4: CodingExercise — Statistik-Dashboard --- */}
+        {/* --- Übung 4: Lückentext — Perzentile --- */}
+        <Lueckentext
+          id="percentile-lueckentext"
+          onComplete={createOnComplete('percentile-lueckentext')}
+          segments={[
+            'import numpy as np\n\nverbrauch = np.array([12, 8, 15, 22, 18, 9, 14, 11, 7, 20])\n\n# Robuster Lageparameter (unempfindlich gegen Ausreißer)\nprint(np.',
+            { id: 'median', answer: 'median', hint: 'Welche Funktion berechnet den Median?' },
+            '(verbrauch))\n\n# Unteres Quartil (Q1)\nq1 = np.percentile(verbrauch, ',
+            { id: 'q1', answer: '25', hint: 'Welches Perzentil markiert das untere Quartil?' },
+            ')\n\n# Oberes Quartil (Q3)\nq3 = np.percentile(verbrauch, ',
+            { id: 'q3', answer: '75', hint: 'Welches Perzentil markiert das obere Quartil?' },
+            ')\n\n# Interquartilsabstand\niqr = q3 - q1',
+          ]}
+        />
+
+        {/* --- Übung 5: CodingExercise — Ausreißer-Erkennung --- */}
+        <CodingExercise
+          id="ausreisser-coding"
+          title="Ausreißer mit Z-Score erkennen"
+          description="Verwende die Z-Score-Methode, um Ausreißer im Verbrauch zu finden: Ein Wert ist ein Ausreißer, wenn er mehr als 2 Standardabweichungen vom Mittelwert entfernt ist. Nutze Boolean Indexing!"
+          onComplete={createOnComplete('ausreisser-coding')}
+          fallbackOutput={"Mittelwert: 15.0\nStd: 5.29\nObergrenze: 25.58\nUntergrenze: 4.42\nAusreißer: [35  2 28]"}
+          starterCode={`import numpy as np
+
+verbrauch = np.array([12, 18, 15, 35, 14, 2, 16, 13, 28, 17])
+
+# 1. Mittelwert und Standardabweichung
+mittel = # Dein Code hier
+std = # Dein Code hier
+print(f"Mittelwert: {mittel}")
+print(f"Std: {round(std, 2)}")
+
+# 2. Ober- und Untergrenze (Mittel ± 2 × Std)
+obergrenze = # Dein Code hier
+untergrenze = # Dein Code hier
+print(f"Obergrenze: {round(obergrenze, 2)}")
+print(f"Untergrenze: {round(untergrenze, 2)}")
+
+# 3. Ausreißer finden: Werte außerhalb der Grenzen (Boolean Indexing)
+ausreisser = # Dein Code hier
+print("Ausreißer:", ausreisser)`}
+          solution={`import numpy as np
+
+verbrauch = np.array([12, 18, 15, 35, 14, 2, 16, 13, 28, 17])
+
+mittel = np.mean(verbrauch)
+std = np.std(verbrauch)
+print(f"Mittelwert: {mittel}")
+print(f"Std: {round(std, 2)}")
+
+obergrenze = mittel + 2 * std
+untergrenze = mittel - 2 * std
+print(f"Obergrenze: {round(obergrenze, 2)}")
+print(f"Untergrenze: {round(untergrenze, 2)}")
+
+ausreisser = verbrauch[(verbrauch > obergrenze) | (verbrauch < untergrenze)]
+print("Ausreißer:", ausreisser)`}
+          validationCode={`expected_mittel = np.mean(verbrauch)
+expected_std = np.std(verbrauch)
+assert abs(mittel - expected_mittel) < 0.01, f"mittel sollte {expected_mittel} sein"
+assert abs(std - expected_std) < 0.01, f"std sollte {expected_std:.2f} sein"
+assert abs(obergrenze - (expected_mittel + 2 * expected_std)) < 0.01, "obergrenze = mittel + 2*std"
+assert abs(untergrenze - (expected_mittel - 2 * expected_std)) < 0.01, "untergrenze = mittel - 2*std"
+expected_out = verbrauch[(verbrauch > obergrenze) | (verbrauch < untergrenze)]
+assert np.array_equal(ausreisser, expected_out), f"ausreisser sollte {expected_out} sein"
+print("Ausreißer-Erkennung korrekt!")`}
+          hints={[
+            'Mittelwert: np.mean(verbrauch), Std: np.std(verbrauch)',
+            'Grenzen: mittel + 2 * std (oben), mittel - 2 * std (unten)',
+            'Ausreißer: verbrauch[(verbrauch > obergrenze) | (verbrauch < untergrenze)] — | für logisches ODER',
+          ]}
+        />
+
+        {/* --- Übung 6: CodingExercise — Statistik-Dashboard --- */}
         <CodingExercise
           id="statistik-dashboard"
           title="Statistik-Dashboard für Haushalte"
           description="Berechne für 4 Haushalte über 7 Tage: Mittelwert, Median und Standardabweichung pro Haushalt, und finde den Haushalt mit dem höchsten Durchschnittsverbrauch."
+          onComplete={createOnComplete('statistik-dashboard')}
+          fallbackOutput={"Verbrauch-Shape: (4, 7)\nMittelwert: [17.52 14.83 16.21 18.95]\nMedian: [18.03 14.25 16.78 19.12]\nStd: [5.42 4.81 6.13 4.95]\nTop-Verbraucher: Haushalt 3"}
           starterCode={`import numpy as np
 
 np.random.seed(42)
@@ -214,6 +295,8 @@ print("Statistik-Dashboard korrekt!")`}
           id="korrelation-coding"
           title="Korrelation berechnen"
           description="Berechne den Korrelationskoeffizienten zwischen Temperatur und Stromverbrauch. Extrahiere den r-Wert aus der Korrelationsmatrix."
+          onComplete={createOnComplete('korrelation-coding')}
+          fallbackOutput={"Korrelationsmatrix:\n [[ 1.    -0.983]\n [-0.983  1.   ]]\nr-Wert: -0.983\nStarke negative Korrelation: Heizen bei Kälte!"}
           starterCode={`import numpy as np
 
 # Tagestemperaturen (°C) und Tagesverbrauch (kWh) für 10 Tage

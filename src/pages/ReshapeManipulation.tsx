@@ -3,9 +3,11 @@ import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ShapeTransformer from '../components/visualizations/ShapeTransformer'
 import MemoryLayoutViewer from '../components/visualizations/MemoryLayoutViewer'
+import MultipleChoice from '../components/exercises/MultipleChoice'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 const reshapeValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 const reshapeShapes: [number, number][] = [
@@ -25,11 +27,12 @@ const memoryData = [
 
 export default function ReshapeManipulation() {
   useChapterTracking('reshape-manipulation')
+  const { createOnComplete } = useExerciseTracking('reshape-manipulation', 6)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 6: Reshape & Manipulation</h1>
         <p className="text-slate-600 mb-6">
           Mit <code className="text-sm bg-slate-100 px-1 rounded">reshape</code>,{' '}
@@ -110,6 +113,7 @@ print(np.stack([a, b], axis=0).shape)        # (2, 2, 2)`}
         <ShapePredictor
           id="reshape-shape-1"
           title="Shape vorhersagen: Tagesmatrix"
+          onComplete={createOnComplete('reshape-shape-1')}
           context="stunden = np.arange(8760)  # 365 Tage × 24 Stunden"
           operation="tage = stunden.reshape(365, 24)"
           expectedShape={[365, 24]}
@@ -120,6 +124,7 @@ print(np.stack([a, b], axis=0).shape)        # (2, 2, 2)`}
         <ShapePredictor
           id="reshape-shape-2"
           title="Shape vorhersagen: Automatische Dimension"
+          onComplete={createOnComplete('reshape-shape-2')}
           context="data = np.arange(12)"
           operation="ergebnis = data.reshape(4, -1)"
           expectedShape={[4, 3]}
@@ -129,6 +134,7 @@ print(np.stack([a, b], axis=0).shape)        # (2, 2, 2)`}
         {/* --- Übung 3: Lückentext --- */}
         <Lueckentext
           id="reshape-lueckentext"
+          onComplete={createOnComplete('reshape-lueckentext')}
           segments={[
             'import numpy as np\n\ndata = np.arange(12)\n\n# Umformen in eine 3×4-Matrix\nmatrix = data.',
             { id: 'func', answer: 'reshape', hint: 'Welche Methode ändert die Form eines Arrays?' },
@@ -141,11 +147,38 @@ print(np.stack([a, b], axis=0).shape)        # (2, 2, 2)`}
           ]}
         />
 
-        {/* --- Übung 4: CodingExercise — Wochendaten reshapen --- */}
+        {/* --- Übung 4: MultipleChoice — flatten vs. ravel --- */}
+        <MultipleChoice
+          id="flatten-vs-ravel"
+          question="Was ist der Unterschied zwischen flatten() und ravel()?"
+          onComplete={createOnComplete('flatten-vs-ravel')}
+          options={[
+            { text: 'Kein Unterschied, beides sind Aliase', explanation: 'Falsch — sie verhalten sich bei Änderungen unterschiedlich.' },
+            { text: 'flatten() erzeugt eine Kopie, ravel() einen View (wenn möglich)', explanation: 'Richtig! Bei flatten() sind Änderungen am Ergebnis unabhängig vom Original. ravel() gibt nach Möglichkeit einen View zurück — Änderungen wirken sich auf das Original aus.' },
+            { text: 'ravel() erzeugt eine Kopie, flatten() einen View', explanation: 'Falsch — es ist genau umgekehrt.' },
+            { text: 'flatten() funktioniert nur für 2D, ravel() für beliebige Dimensionen', explanation: 'Falsch — beide funktionieren für beliebige Dimensionen.' },
+          ]}
+          correctIndex={1}
+        />
+
+        {/* --- Übung 5: ShapePredictor — concatenate vs. stack --- */}
+        <ShapePredictor
+          id="concat-stack-shape"
+          title="Shape vorhersagen: np.stack"
+          onComplete={createOnComplete('concat-stack-shape')}
+          context="a = np.ones((3, 4))\nb = np.ones((3, 4))"
+          operation="ergebnis = np.stack([a, b], axis=0)"
+          expectedShape={[2, 3, 4]}
+          explanation="stack fügt eine neue Achse hinzu: 2 Arrays mit Shape (3,4) → neue Achse 0 mit Größe 2 → (2, 3, 4). Im Gegensatz dazu verlängert concatenate eine vorhandene Achse: np.concatenate([a, b], axis=0) → (6, 4)."
+        />
+
+        {/* --- Übung 6: CodingExercise — Wochendaten reshapen --- */}
         <CodingExercise
           id="reshape-coding"
           title="Wochendaten umstrukturieren"
           description="Du hast 168 Stundenwerte (eine Woche). Forme sie in eine Tagesmatrix (7×24) um und berechne den Durchschnittsverbrauch pro Tag (axis=1)."
+          onComplete={createOnComplete('reshape-coding')}
+          fallbackOutput={"Original-Shape: (168,)\nWoche-Shape: (7, 24)\nTagesmittel: [14.82 15.21 14.03 15.67 14.98 15.32 14.55]\nAnzahl Tage: 7"}
           starterCode={`import numpy as np
 
 # 168 Stundenwerte (7 Tage × 24 Stunden)
