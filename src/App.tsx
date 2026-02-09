@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
+import ErrorBoundary from './components/common/ErrorBoundary'
 
 const Home = lazy(() => import('./pages/Home'))
 const WarumNumpy = lazy(() => import('./pages/WarumNumpy'))
@@ -24,18 +25,20 @@ function LoadingFallback() {
 
 export default function App() {
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/warum-numpy" element={<WarumNumpy />} />
-        <Route path="/array-grundlagen" element={<ArrayGrundlagen />} />
-        <Route path="/indexing-slicing" element={<IndexingSlicing />} />
-        <Route path="/array-operationen" element={<ArrayOperationen />} />
-        <Route path="/broadcasting" element={<Broadcasting />} />
-        <Route path="/reshape-manipulation" element={<ReshapeManipulation />} />
-        <Route path="/statistische-auswertung" element={<StatistischeAuswertung />} />
-        <Route path="/praxisprojekt" element={<Praxisprojekt />} />
-      </Routes>
-    </Suspense>
+    <ErrorBoundary context="App">
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/warum-numpy" element={<WarumNumpy />} />
+          <Route path="/array-grundlagen" element={<ArrayGrundlagen />} />
+          <Route path="/indexing-slicing" element={<IndexingSlicing />} />
+          <Route path="/array-operationen" element={<ArrayOperationen />} />
+          <Route path="/broadcasting" element={<Broadcasting />} />
+          <Route path="/reshape-manipulation" element={<ReshapeManipulation />} />
+          <Route path="/statistische-auswertung" element={<StatistischeAuswertung />} />
+          <Route path="/praxisprojekt" element={<Praxisprojekt />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
