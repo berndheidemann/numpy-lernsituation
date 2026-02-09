@@ -1,6 +1,15 @@
 import Navigation from '../components/common/Navigation'
 import CodingExercise from '../components/exercises/CodingExercise'
+import PerformanceChart from '../components/visualizations/PerformanceChart'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+
+const benchmarks = [
+  { size: 1_000, listMs: 0.3, numpyMs: 0.02 },
+  { size: 10_000, listMs: 3, numpyMs: 0.03 },
+  { size: 100_000, listMs: 30, numpyMs: 0.1 },
+  { size: 1_000_000, listMs: 300, numpyMs: 0.8 },
+  { size: 10_000_000, listMs: 3200, numpyMs: 8 },
+]
 
 export default function WarumNumpy() {
   useChapterTracking('warum-numpy')
@@ -15,6 +24,18 @@ export default function WarumNumpy() {
           warum NumPy-Arrays so viel schneller sind als Python-Listen und was
           Vektorisierung (gleichzeitige Verarbeitung aller Elemente) bedeutet.
         </p>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Performance-Vergleich</h2>
+          <p className="text-slate-600 mb-3">
+            Bewege den Slider, um zu sehen, wie sich der Geschwindigkeitsunterschied
+            zwischen Python-Listen und NumPy mit wachsender Datenmenge verändert:
+          </p>
+          <PerformanceChart
+            label="Listen vs. NumPy: Summe berechnen"
+            benchmarks={benchmarks}
+          />
+        </section>
 
         <CodingExercise
           id="warum-numpy-1"
