@@ -58,6 +58,21 @@ test.describe('Broadcasting — Übungen', () => {
     })
   })
 
+  // --- DragDropExercise — Broadcasting-Kompatibilität ---
+  test.describe('DragDropExercise — Broadcasting-Kompatibilität', () => {
+    test('Übung wird angezeigt', async ({ page }) => {
+      const dd = page.getByTestId('dragdrop-exercise-broadcast-compatibility-dd')
+      await expect(dd).toBeVisible()
+      await expect(dd.getByTestId('drag-item-pair-1')).toBeVisible()
+      await expect(dd.getByTestId('drop-zone-result-1')).toBeVisible()
+    })
+
+    test('Überprüfen-Button ist initial deaktiviert', async ({ page }) => {
+      const dd = page.getByTestId('dragdrop-exercise-broadcast-compatibility-dd')
+      await expect(dd.getByRole('button', { name: /überprüfen/i })).toBeDisabled()
+    })
+  })
+
   // --- CodingExercise ---
   test('CodingExercise ist sichtbar', async ({ page }) => {
     const coding = page.getByTestId('coding-exercise-broadcasting-coding')

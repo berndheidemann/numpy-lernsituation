@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { ChapterProgress, LearningProgress } from '../types'
 
-const STORE_VERSION = 1
+const STORE_VERSION = 2
 
 const CHAPTER_IDS = [
   'warum-numpy',
@@ -23,6 +23,7 @@ function createDefaultChapters(): Record<string, ChapterProgress> {
       visited: false,
       exercisesCompleted: 0,
       exercisesTotal: 0,
+      completedExerciseIds: [],
     }
   }
   return chapters
@@ -30,7 +31,7 @@ function createDefaultChapters(): Record<string, ChapterProgress> {
 
 interface ProgressActions {
   markChapterVisited: (chapterId: string) => void
-  completeExercise: (chapterId: string) => void
+  completeExercise: (chapterId: string, exerciseId: string) => void
   setExercisesTotal: (chapterId: string, total: number) => void
   addBadge: (badge: string) => void
   resetProgress: () => void
@@ -65,15 +66,20 @@ export const useProgressStore = create<ProgressStore>()(
           }
         }),
 
-      completeExercise: (chapterId: string) =>
+      completeExercise: (chapterId: string, exerciseId: string) =>
         set((state) => {
           const chapter = state.chapters[chapterId]
           if (!chapter) return state
-          const newCompleted = chapter.exercisesCompleted + 1
+          if (chapter.completedExerciseIds.includes(exerciseId)) return state
+          const newIds = [...chapter.completedExerciseIds, exerciseId]
           return {
             chapters: {
               ...state.chapters,
-              [chapterId]: { ...chapter, exercisesCompleted: newCompleted },
+              [chapterId]: {
+                ...chapter,
+                exercisesCompleted: newIds.length,
+                completedExerciseIds: newIds,
+              },
             },
             totalExercisesCompleted: state.totalExercisesCompleted + 1,
           }

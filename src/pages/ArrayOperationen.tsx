@@ -2,6 +2,7 @@ import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
+import AxisAggregationVisualizer from '../components/visualizations/AxisAggregationVisualizer'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import ShapePredictor from '../components/exercises/ShapePredictor'
@@ -134,6 +135,19 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
           />
         </section>
 
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Achsen-Aggregation interaktiv</h2>
+          <p className="text-slate-600 mb-3">
+            Klicke auf die Buttons, um zu sehen, wie <code className="text-sm bg-slate-100 px-1 rounded">axis=0</code> und{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">axis=1</code> die Aggregation beeinflussen:
+          </p>
+          <AxisAggregationVisualizer
+            data={[[10, 15, 12, 8], [22, 18, 25, 20], [7, 9, 6, 11]]}
+            label="Achsen-Trainer: 3 Haushalte × 4 Stunden"
+            fn="sum"
+          />
+        </section>
+
         {/* --- Übung 1: MultipleChoice — Logische Operatoren --- */}
         <MultipleChoice
           id="logische-operatoren"
@@ -168,7 +182,7 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
           prefilled={[[null, null, null]]}
         />
 
-        {/* --- Übung 3: ShapePredictor — Aggregation Shape --- */}
+        {/* --- Übung 4: ShapePredictor — Aggregation Shape --- */}
         <ShapePredictor
           id="aggregation-shape"
           title="Shape nach Aggregation vorhersagen"
@@ -179,7 +193,7 @@ print(np.mean(verbrauch, axis=1))  # [11.25 21.25  8.25] — Durchschnitt pro HH
           explanation="axis=1 aggregiert über die Spalten (24 Stunden) → ein Wert pro Zeile → Shape (5,)."
         />
 
-        {/* --- Übung 4: Lückentext — Kosten berechnen --- */}
+        {/* --- Übung 5: Lückentext — Kosten berechnen --- */}
         <Lueckentext
           id="operationen-lueckentext"
           onComplete={createOnComplete('operationen-lueckentext')}

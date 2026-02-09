@@ -3,6 +3,7 @@ import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ShapeTransformer from '../components/visualizations/ShapeTransformer'
 import MemoryLayoutViewer from '../components/visualizations/MemoryLayoutViewer'
+import TransposeVisualizer from '../components/visualizations/TransposeVisualizer'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import CodingExercise from '../components/exercises/CodingExercise'
@@ -106,6 +107,18 @@ a = np.array([[1, 2], [3, 4]])
 b = np.array([[5, 6], [7, 8]])
 print(np.concatenate([a, b], axis=0).shape)  # (4, 2)
 print(np.stack([a, b], axis=0).shape)        # (2, 2, 2)`}
+          />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Transpose interaktiv</h2>
+          <p className="text-slate-600 mb-3">
+            <code className="text-sm bg-slate-100 px-1 rounded">.T</code> vertauscht Zeilen und Spalten — Element
+            [r, c] wird zu [c, r]. Die Farben zeigen, wohin jede Zelle wandert:
+          </p>
+          <TransposeVisualizer
+            data={[[10, 20, 30, 40], [50, 60, 70, 80], [90, 100, 110, 120]]}
+            label="Transpose: (3, 4) → (4, 3)"
           />
         </section>
 

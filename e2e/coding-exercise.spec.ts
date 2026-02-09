@@ -57,7 +57,7 @@ test.describe('CodingExercise', () => {
     await exercise.getByRole('button', { name: /ausführen/i }).click()
 
     // Should show loading state
-    await expect(exercise.getByText(/läuft|wird geladen/i)).toBeVisible({ timeout: 5_000 })
+    await expect(exercise.locator('span', { hasText: /läuft|wird geladen/i }).first()).toBeVisible({ timeout: 5_000 })
 
     // Wait for output (Pyodide download + execution)
     await expect(exercise.getByText('Array:')).toBeVisible({ timeout: 90_000 })

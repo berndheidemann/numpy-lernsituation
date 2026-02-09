@@ -6,15 +6,18 @@ import DragDropExercise from '../components/exercises/DragDropExercise'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import CodingExercise from '../components/exercises/CodingExercise'
+import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 export default function ArrayGrundlagen() {
   useChapterTracking('array-grundlagen')
+  const { createOnComplete } = useExerciseTracking('array-grundlagen', 7)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">
           Kapitel 2: Array-Grundlagen
         </h1>
@@ -44,6 +47,12 @@ einsen = np.ones((2, 3))        # 2x3 Matrix mit Einsen
 bereich = np.arange(0, 10, 2)   # [0, 2, 4, 6, 8]
 gleich = np.linspace(0, 1, 5)   # [0.0, 0.25, 0.5, 0.75, 1.0]`}
           />
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <ArrayVisualizer data={[1, 2, 3, 4, 5]} label="np.array([1, 2, 3, 4, 5])" colorMode="heatmap" />
+            <ArrayVisualizer data={[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]} label="np.zeros((3, 4))" colorMode="uniform" compact />
+            <ArrayVisualizer data={[[1, 1, 1], [1, 1, 1]]} label="np.ones((2, 3))" colorMode="uniform" compact />
+            <ArrayVisualizer data={[0, 2, 4, 6, 8]} label="np.arange(0, 10, 2)" colorMode="heatmap" />
+          </div>
         </section>
 
         <section className="mb-8">
@@ -65,6 +74,7 @@ print(verbrauch.dtype)   # float64`}
         <MultipleChoice
           id="dtype-quiz"
           question="Welchen Dtype hat np.array([1, 2.5, 3])?"
+          onComplete={createOnComplete('dtype-quiz')}
           options={[
             { text: 'int64', explanation: 'Falsch — ein Float-Wert (2.5) erzwingt float64 für das gesamte Array.' },
             { text: 'float64', explanation: 'Richtig! Sobald ein Wert ein Float ist, wird das gesamte Array zu float64.' },
@@ -77,6 +87,7 @@ print(verbrauch.dtype)   # float64`}
         {/* --- Übung 2: Lückentext --- */}
         <Lueckentext
           id="array-creation"
+          onComplete={createOnComplete('array-creation')}
           segments={[
             'import numpy as np\n\n# Erstelle ein 3x4 Array mit Nullen\nnullen = np.',
             { id: 'func', answer: 'zeros', hint: 'Welche Funktion erstellt ein Array voller Nullen?' },
@@ -93,6 +104,7 @@ print(verbrauch.dtype)   # float64`}
           id="array-functions"
           title="Array-Baukasten"
           description="Ordne jede Beschreibung der passenden NumPy-Funktion zu."
+          onComplete={createOnComplete('array-functions')}
           pairs={[
             { itemId: 'np-zeros', itemLabel: 'np.zeros()', zoneId: 'zone-nullen', zoneLabel: 'Array mit Nullen erstellen' },
             { itemId: 'np-arange', itemLabel: 'np.arange()', zoneId: 'zone-bereich', zoneLabel: 'Zahlenbereich erzeugen (wie range)' },
@@ -106,6 +118,7 @@ print(verbrauch.dtype)   # float64`}
           id="array-result"
           title="Array-Ergebnis vorhersagen"
           description="Welche Werte erzeugt np.arange(2, 12, 3)? Fülle das 1D-Array aus."
+          onComplete={createOnComplete('array-result')}
           expected={[[2, 5, 8, 11]]}
           prefilled={[[null, null, null, null]]}
         />
@@ -115,6 +128,7 @@ print(verbrauch.dtype)   # float64`}
           id="shape-1"
           title="Shape vorhersagen"
           operation="ergebnis = np.zeros((5, 24))"
+          onComplete={createOnComplete('shape-1')}
           expectedShape={[5, 24]}
           explanation="np.zeros((5, 24)) erstellt eine 5×24 Matrix — die Shape entspricht dem Tupel-Argument."
         />
@@ -123,16 +137,47 @@ print(verbrauch.dtype)   # float64`}
           id="shape-2"
           title="Shape vorhersagen"
           context="a = np.array([[1, 2, 3], [4, 5, 6]])"
+          onComplete={createOnComplete('shape-2')}
           operation="ergebnis = a"
           expectedShape={[2, 3]}
           explanation="Das Array hat 2 Zeilen und 3 Spalten, also Shape (2, 3)."
         />
+
+        {/* --- 3D-Array-Visualisierung --- */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">3D-Arrays: Mehrere Schichten</h2>
+          <p className="text-slate-600 mb-3">
+            Ein 3D-Array kann man sich als Stapel von 2D-Matrizen vorstellen. Im SmartEnergy-Szenario:
+            Verbrauchsdaten gruppiert nach Tarif (2 Tarife × 3 Haushalte × 4 Stunden).
+          </p>
+          <ArrayVisualizer
+            data={[
+              [[10, 15, 12, 8], [22, 18, 25, 20], [7, 9, 6, 11]],
+              [[14, 11, 16, 13], [19, 23, 17, 21], [8, 12, 10, 15]],
+            ]}
+            label="verbrauch — Shape (2, 3, 4)"
+            compact
+          />
+          <CodeBlock
+            title="3D-Array erstellen"
+            code={`import numpy as np
+
+# 2 Tarife × 3 Haushalte × 4 Stunden
+verbrauch_3d = np.random.uniform(5, 25, size=(2, 3, 4))
+print(verbrauch_3d.shape)  # (2, 3, 4)
+print(verbrauch_3d.ndim)   # 3
+print(verbrauch_3d[0])     # Erster Tarif: Shape (3, 4)
+print(verbrauch_3d[0, 1])  # Haushalt 1 im Tarif 0: Shape (4,)`}
+          />
+        </section>
 
         {/* --- Übung 6: Live-Coding --- */}
         <CodingExercise
           id="array-grundlagen-coding"
           title="Erstes Array erstellen"
           description="Erstelle ein NumPy-Array 'verbrauch' mit Shape (4, 7) — die täglichen Verbräuche von 4 Haushalten über eine Woche. Verwende np.random.uniform(5, 25, size=(4, 7))."
+          onComplete={createOnComplete('array-grundlagen-coding')}
+          fallbackOutput={"Shape: (4, 7)\nNdim: 2\nSize: 28\nDtype: float64"}
           starterCode={`import numpy as np
 
 # Erstelle das Array mit Zufallswerten zwischen 5 und 25 kWh

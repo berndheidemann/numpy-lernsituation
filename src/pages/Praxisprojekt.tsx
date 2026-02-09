@@ -1,16 +1,20 @@
 import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
+import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
+import BroadcastingAnimator from '../components/visualizations/BroadcastingAnimator'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import CodingExercise from '../components/exercises/CodingExercise'
 import { useChapterTracking } from '../hooks/useChapterTracking'
+import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
 export default function Praxisprojekt() {
   useChapterTracking('praxisprojekt')
+  const { createOnComplete } = useExerciseTracking('praxisprojekt', 4)
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 8: Praxisprojekt</h1>
         <p className="text-slate-600 mb-6">
           In diesem Capstone-Projekt führst du alle gelernten NumPy-Konzepte zusammen: Array-Erstellung,
@@ -51,11 +55,39 @@ export default function Praxisprojekt() {
           />
         </section>
 
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Broadcasting in der Tarifberechnung</h2>
+          <p className="text-slate-600 mb-3">
+            Der Kern des Projekts: Stundenpreise (1D) werden per Broadcasting auf alle Haushalte (2D)
+            angewendet:
+          </p>
+          <BroadcastingAnimator
+            shapeA={[10, 168]}
+            shapeB={[168]}
+            label="Verbrauch (10, 168) × Stundenpreise (168,)"
+          />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Beispiel-Daten: Tagespreise</h2>
+          <p className="text-slate-600 mb-3">
+            Die 24 Stundenpreise eines Tages — günstig nachts, teuer morgens und abends:
+          </p>
+          <ArrayVisualizer
+            data={[0.18, 0.16, 0.15, 0.15, 0.16, 0.20, 0.28, 0.35, 0.38, 0.36, 0.34, 0.32, 0.30, 0.28, 0.26, 0.25, 0.27, 0.32, 0.38, 0.40, 0.36, 0.30, 0.24, 0.20]}
+            label="Tagespreise (€/kWh) — 24 Stunden"
+            colorMode="heatmap"
+            compact
+          />
+        </section>
+
         {/* --- Aufgabe 1: Daten inspizieren + zeitvariabler Tarif --- */}
         <CodingExercise
           id="praxis-tarifvergleich"
           title="Teil 1: Zeitvariable Kosten berechnen"
           description="Erstelle die Simulationsdaten und berechne die Kosten unter dem zeitvariablen Tarif. Nutze Broadcasting, um die Stundenpreise auf alle Haushalte anzuwenden."
+          onComplete={createOnComplete('praxis-tarifvergleich')}
+          fallbackOutput={"Verbrauch-Shape: (10, 168)\nPreise-Shape: (168,)\nKosten-Shape: (10, 168)\nZeitvariabel pro HH: [252.83 248.91 265.12 241.55 258.37 245.72 261.03 253.48 249.16 257.91]"}
           starterCode={`import numpy as np
 
 np.random.seed(42)
@@ -119,6 +151,7 @@ print("Teil 1 korrekt — Broadcasting erfolgreich!")`}
         <MultipleChoice
           id="praxis-broadcasting-check"
           question="Warum funktioniert verbrauch (10, 168) * preise_zeitvariabel (168,) ohne Fehler?"
+          onComplete={createOnComplete('praxis-broadcasting-check')}
           options={[
             { text: 'Weil beide Arrays gleich viele Elemente haben', explanation: 'Falsch — die Elementanzahl ist verschieden (10×168 vs. 168).' },
             { text: 'Weil NumPy preise (168,) zu (1, 168) auffüllt und auf (10, 168) streckt', explanation: 'Richtig! Broadcasting-Regel: Fehlende Dimensionen werden links mit 1 aufgefüllt, dann gestreckt.' },
@@ -133,6 +166,8 @@ print("Teil 1 korrekt — Broadcasting erfolgreich!")`}
           id="praxis-tarifvergleich-2"
           title="Teil 2: Tarifvergleich — Wer profitiert?"
           description="Berechne die Flatrate-Kosten (0.28 €/kWh), die Differenz und finde heraus, welche Haushalte vom Flatrate-Tarif profitieren würden."
+          onComplete={createOnComplete('praxis-tarifvergleich-2')}
+          fallbackOutput={"Flatrate pro HH: [262.15 258.42 275.03 250.88 268.22 255.18 271.45 263.01 258.87 267.93]\nDifferenz: [-9.32 -9.51 -9.91 -9.33 -9.85 -9.46 -10.42 -9.53 -9.71 -10.02]\nProfitiert: [False False False False False False False False False False]\n0 von 10 Haushalten profitieren vom Flatrate-Tarif"}
           starterCode={`import numpy as np
 
 np.random.seed(42)
@@ -210,6 +245,8 @@ print("Tarifvergleich korrekt!")`}
           id="praxis-tagesmuster"
           title="Teil 3: Tagesmuster erkennen"
           description="Reshape die Stundendaten in eine Tagesmatrix und berechne das durchschnittliche Tagesprofil (24 Stunden) über alle Haushalte und alle Tage."
+          onComplete={createOnComplete('praxis-tagesmuster')}
+          fallbackOutput={"Tagesmatrix-Shape: (10, 7, 24)\nTagesprofil-Shape: (24,)\nTagesprofil: [11.52 11.48 11.55 11.41 11.63 11.47 11.52 11.58 11.43 11.49 11.55 11.61 11.47 11.53 11.42 11.56 11.48 11.51 11.59 11.44 11.52 11.47 11.55 11.49]\nSpitzenverbrauch um 11:00 Uhr"}
           starterCode={`import numpy as np
 
 np.random.seed(42)

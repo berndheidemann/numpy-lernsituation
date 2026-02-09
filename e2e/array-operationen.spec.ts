@@ -84,8 +84,33 @@ test.describe('ArrayOperationen — Übungen', () => {
     })
   })
 
-  // --- CodingExercise ---
-  test('CodingExercise ist sichtbar', async ({ page }) => {
+  // --- ArrayFillExercise — Logische Verknüpfung ---
+  test.describe('ArrayFillExercise — Logische Verknüpfung', () => {
+    test('Übung wird angezeigt', async ({ page }) => {
+      const af = page.getByTestId('arrayfill-exercise-logische-verknuepfung-fill')
+      await expect(af).toBeVisible()
+      await expect(af.locator('h3')).toContainText('Logische Verknüpfung')
+    })
+
+    test('Korrekte Werte werden akzeptiert', async ({ page }) => {
+      const af = page.getByTestId('arrayfill-exercise-logische-verknuepfung-fill')
+      await af.getByTestId('cell-0-0').fill('22')
+      await af.getByTestId('cell-0-1').fill('15')
+      await af.getByTestId('cell-0-2').fill('18')
+      await af.getByRole('button', { name: /überprüfen/i }).click()
+      await expect(af.getByTestId('arrayfill-result')).toContainText('korrekt')
+    })
+  })
+
+  // --- CodingExercise — Filter + Aggregation ---
+  test('CodingExercise — Filter + Aggregation ist sichtbar', async ({ page }) => {
+    const coding = page.getByTestId('coding-exercise-filter-aggregation-coding')
+    await expect(coding).toBeVisible()
+    await expect(coding.locator('h3')).toContainText('Filtern und Aggregieren')
+  })
+
+  // --- CodingExercise — Stromkosten ---
+  test('CodingExercise — Stromkosten-Rechner ist sichtbar', async ({ page }) => {
     const coding = page.getByTestId('coding-exercise-stromkosten-coding')
     await expect(coding).toBeVisible()
     await expect(coding.locator('h3')).toContainText('Stromkosten-Rechner')

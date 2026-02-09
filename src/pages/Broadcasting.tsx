@@ -1,5 +1,6 @@
 import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
+import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import BroadcastingAnimator from '../components/visualizations/BroadcastingAnimator'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import MultipleChoice from '../components/exercises/MultipleChoice'
@@ -60,6 +61,46 @@ export default function Broadcasting() {
             shapeB={[3]}
             label="Beispiel 3: (3,4) + (3,) — Inkompatibel!"
           />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Broadcasting mit Werten</h2>
+          <p className="text-slate-600 mb-3">
+            So sieht Broadcasting auf Daten-Ebene aus: Die Stundenpreise (1D) werden auf alle
+            Haushalte (2D) angewendet — jede Zeile wird mit denselben Preisen multipliziert:
+          </p>
+          <div className="grid gap-4 md:grid-cols-3 items-start">
+            <div>
+              <ArrayVisualizer
+                data={[[12, 8, 16], [22, 18, 10], [9, 14, 20], [15, 11, 7]]}
+                label="Verbrauch (4×3)"
+                colorMode="heatmap"
+                compact
+              />
+            </div>
+            <div className="flex flex-col items-center justify-center pt-8">
+              <span className="text-2xl text-slate-400 font-bold">×</span>
+              <ArrayVisualizer
+                data={[0.28, 0.35, 0.30]}
+                label="Preise (3,) → wird gestreckt"
+                colorMode="uniform"
+                compact
+              />
+            </div>
+            <div>
+              <ArrayVisualizer
+                data={[
+                  [3.36, 2.80, 4.80],
+                  [6.16, 6.30, 3.00],
+                  [2.52, 4.90, 6.00],
+                  [4.20, 3.85, 2.10],
+                ]}
+                label="= Kosten (4×3)"
+                colorMode="heatmap"
+                compact
+              />
+            </div>
+          </div>
         </section>
 
         {/* --- Theorie: Broadcasting-Regeln im Code --- */}

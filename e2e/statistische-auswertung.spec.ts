@@ -63,14 +63,39 @@ test.describe('StatistischeAuswertung — Übungen', () => {
     })
   })
 
-  // --- CodingExercise 1 ---
+  // --- Lueckentext — Perzentile ---
+  test.describe('Lueckentext — Perzentile', () => {
+    test('Lücken sind editierbar', async ({ page }) => {
+      const lt = page.getByTestId('lueckentext-percentile-lueckentext')
+      await expect(lt).toBeVisible()
+      await expect(lt.getByTestId('gap-median')).toBeEditable()
+    })
+
+    test('Korrekte Eingaben werden akzeptiert', async ({ page }) => {
+      const lt = page.getByTestId('lueckentext-percentile-lueckentext')
+      await lt.getByTestId('gap-median').fill('median')
+      await lt.getByTestId('gap-q1').fill('25')
+      await lt.getByTestId('gap-q3').fill('75')
+      await lt.getByRole('button', { name: /überprüfen/i }).click()
+      await expect(lt.getByTestId('lueckentext-result')).toContainText('korrekt')
+    })
+  })
+
+  // --- CodingExercise — Ausreißer ---
+  test('CodingExercise — Ausreißer-Erkennung ist sichtbar', async ({ page }) => {
+    const coding = page.getByTestId('coding-exercise-ausreisser-coding')
+    await expect(coding).toBeVisible()
+    await expect(coding.locator('h3')).toContainText('Ausreißer')
+  })
+
+  // --- CodingExercise — Statistik-Dashboard ---
   test('CodingExercise — Statistik-Dashboard ist sichtbar', async ({ page }) => {
     const coding = page.getByTestId('coding-exercise-statistik-dashboard')
     await expect(coding).toBeVisible()
     await expect(coding.locator('h3')).toContainText('Statistik-Dashboard')
   })
 
-  // --- CodingExercise 2 ---
+  // --- CodingExercise — Korrelation ---
   test('CodingExercise — Korrelation ist sichtbar', async ({ page }) => {
     const coding = page.getByTestId('coding-exercise-korrelation-coding')
     await expect(coding).toBeVisible()

@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import ErrorBoundary from './components/common/ErrorBoundary'
+import BadgeNotification from './components/common/BadgeNotification'
 
 const Home = lazy(() => import('./pages/Home'))
 const WarumNumpy = lazy(() => import('./pages/WarumNumpy'))
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/praxisprojekt" element={<Praxisprojekt />} />
         </Routes>
       </Suspense>
+      <BadgeNotification />
     </ErrorBoundary>
   )
 }

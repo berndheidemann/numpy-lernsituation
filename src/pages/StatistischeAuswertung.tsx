@@ -2,6 +2,7 @@ import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
+import ScatterPlot from '../components/visualizations/ScatterPlot'
 import DragDropExercise from '../components/exercises/DragDropExercise'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import MultipleChoice from '../components/exercises/MultipleChoice'
@@ -116,6 +117,40 @@ mittel = np.mean(verbrauch)
 std = np.std(verbrauch)
 ausreisser = np.abs(verbrauch - mittel) > 2 * std
 print("Ausreißer:", verbrauch[ausreisser])`}
+          />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Korrelation visualisiert</h2>
+          <p className="text-slate-600 mb-3">
+            Das Streudiagramm zeigt den Zusammenhang zwischen Temperatur und Stromverbrauch.
+            Die Trendlinie und der Korrelationskoeffizient r zeigen: Je kälter, desto höher der Verbrauch.
+          </p>
+          <ScatterPlot
+            xData={[22, 18, 5, -2, 8, 15, 25, 30, 12, 3]}
+            yData={[10, 14, 28, 35, 24, 16, 8, 5, 20, 30]}
+            xLabel="Temperatur (°C)"
+            yLabel="Verbrauch (kWh)"
+            label="Temperatur vs. Stromverbrauch"
+            showTrendLine
+          />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Ausreißer erkennen</h2>
+          <p className="text-slate-600 mb-3">
+            Ausreißer liegen außerhalb der ±2σ-Grenzen (Mittelwert ± 2 Standardabweichungen).
+            Rote Punkte zeigen ungewöhnliche Werte:
+          </p>
+          <ScatterPlot
+            xData={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            yData={[12, 18, 15, 35, 14, 2, 16, 13, 28, 17]}
+            xLabel="Tag"
+            yLabel="Verbrauch (kWh)"
+            label="Tagesverbrauch mit Ausreißer-Erkennung"
+            showTrendLine={false}
+            showOutlierBounds
+            outliersStdFactor={2}
           />
         </section>
 
@@ -290,7 +325,7 @@ print("Statistik-Dashboard korrekt!")`}
           ]}
         />
 
-        {/* --- Übung 5: CodingExercise — Korrelation --- */}
+        {/* --- Übung 7: CodingExercise — Korrelation --- */}
         <CodingExercise
           id="korrelation-coding"
           title="Korrelation berechnen"

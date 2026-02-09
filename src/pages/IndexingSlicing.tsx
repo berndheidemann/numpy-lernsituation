@@ -116,6 +116,33 @@ print(preise[::-1])   # [0.20, 0.28, 0.35, 0.30, 0.22, 0.18] (umgekehrt)
 data = np.arange(16).reshape(4, 4)
 print(data[::2, ::2])  # [[0, 2], [8, 10]]`}
           />
+          <div className="mt-4">
+            <p className="text-sm text-slate-500 mb-2">Negative Indices — positive und negative Zählung:</p>
+            <div className="overflow-x-auto">
+              <svg width={420} height={80} viewBox="0 0 420 80" className="select-none">
+                {[0.18, 0.22, 0.30, 0.35, 0.28, 0.20].map((v, i) => {
+                  const x = 20 + i * 66
+                  const isLast3 = i >= 3
+                  return (
+                    <g key={i}>
+                      <rect x={x} y={24} width={56} height={32} rx={4}
+                        fill={isLast3 ? '#bbf7d0' : '#e2e8f0'} stroke={isLast3 ? '#16a34a' : '#cbd5e1'} strokeWidth={isLast3 ? 2 : 1} />
+                      <text x={x + 28} y={45} textAnchor="middle" fontSize={12} fontFamily="monospace" className="fill-slate-800">{v}</text>
+                      <text x={x + 28} y={16} textAnchor="middle" fontSize={9} fontFamily="monospace" className="fill-blue-500">{i}</text>
+                      <text x={x + 28} y={72} textAnchor="middle" fontSize={9} fontFamily="monospace" className="fill-red-500">{i - 6}</text>
+                    </g>
+                  )
+                })}
+                <text x={0} y={16} fontSize={9} className="fill-blue-500" fontFamily="monospace">+</text>
+                <text x={0} y={72} fontSize={9} className="fill-red-500" fontFamily="monospace">−</text>
+              </svg>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              <span className="text-blue-500">Blau</span>: positive Indices |{' '}
+              <span className="text-red-500">Rot</span>: negative Indices |{' '}
+              <span className="text-green-600">Grün</span>: preise[-3:] Ergebnis
+            </p>
+          </div>
         </section>
 
         {/* --- Übung 1: ArrayFill — Slicing-Ergebnis vorhersagen --- */}
@@ -196,12 +223,40 @@ print("Gefiltert:", hoher_verbrauch)  # [15, 22, 18, 20]
 print(verbrauch[verbrauch >= 15])     # [15, 22, 18, 20]`}
           />
           <div className="mt-4">
-            <p className="text-sm text-slate-500 mb-2">Visualisierung: Grün markierte Elemente erfüllen die Bedingung (≥ 15):</p>
-            <ArrayVisualizer
-              data={[12, 8, 15, 22, 18, 9, 14, 11, 7, 20]}
-              label="verbrauch — Elemente ≥ 15 hervorgehoben"
-              highlighted={new Set(['0,2', '0,3', '0,4', '0,9'])}
-            />
+            <p className="text-sm text-slate-600 mb-2 font-medium">Dreischritt-Visualisierung:</p>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div>
+                <ArrayVisualizer
+                  data={[12, 8, 15, 22, 18, 9, 14, 11, 7, 20]}
+                  label="1. Original-Array"
+                  colorMode="heatmap"
+                  compact
+                />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-600 mb-2">2. Boolean-Maske (≥ 15)</p>
+                <div className="overflow-x-auto">
+                  <svg width={370} height={46} viewBox="0 0 370 46" className="select-none">
+                    {[false, false, true, true, true, false, false, false, false, true].map((v, i) => (
+                      <g key={i}>
+                        <rect x={4 + i * 36} y={4} width={34} height={34} rx={4}
+                          fill={v ? '#bbf7d0' : '#fecaca'} stroke={v ? '#16a34a' : '#dc2626'} strokeWidth={1} />
+                        <text x={4 + i * 36 + 17} y={26} textAnchor="middle" fontSize={9} fontFamily="monospace"
+                          className={v ? 'fill-green-800' : 'fill-red-800'}>{v ? 'T' : 'F'}</text>
+                      </g>
+                    ))}
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <ArrayVisualizer
+                  data={[15, 22, 18, 20]}
+                  label="3. Gefiltertes Ergebnis"
+                  colorMode="heatmap"
+                  compact
+                />
+              </div>
+            </div>
           </div>
         </section>
 

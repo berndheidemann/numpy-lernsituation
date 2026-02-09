@@ -3,6 +3,7 @@ import { usePyodide } from '../../hooks/usePyodide'
 import PythonEditor from '../pyodide/PythonEditor'
 import PythonOutput from '../pyodide/PythonOutput'
 import ErrorBoundary from '../common/ErrorBoundary'
+import CodeBlock from '../common/CodeBlock'
 
 interface CodingExerciseProps {
   id: string
@@ -13,6 +14,7 @@ interface CodingExerciseProps {
   validationCode?: string
   hints?: string[]
   onComplete?: () => void
+  fallbackOutput?: string
 }
 
 export default function CodingExercise({
@@ -24,6 +26,7 @@ export default function CodingExercise({
   validationCode,
   hints,
   onComplete,
+  fallbackOutput,
 }: CodingExerciseProps) {
   const { status, runPython, runWithValidation } = usePyodide()
   const [running, setRunning] = useState(false)
@@ -93,80 +96,108 @@ export default function CodingExercise({
         </h3>
         <p className="text-slate-600 mb-4">{description}</p>
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        {status === 'unsupported' ? (
           <div>
-            <PythonEditor
-              key={editorKey}
-              defaultCode={starterCode}
-              onRun={handleRun}
-              onReset={handleReset}
-              running={running}
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <PythonOutput
-              stdout={stdout}
-              stderr={stderr}
-              error={error}
-              executionTime={executionTime}
-              status={status}
-            />
-
-            {passed !== null && (
-              <div
-                className={`rounded-lg p-3 text-sm ${
-                  passed
-                    ? 'bg-green-50 border border-green-200 text-green-800'
-                    : 'bg-red-50 border border-red-200 text-red-800'
-                }`}
-                role="status"
-                data-testid="validation-result"
-              >
-                <span className="font-medium">
-                  {passed ? 'Bestanden!' : 'Noch nicht korrekt.'}
-                </span>
-                {validationMessage && (
-                  <p className="mt-1">{validationMessage}</p>
-                )}
+            <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800 mb-4" role="alert">
+              Live-Coding ist in diesem Browser nicht verfügbar (WebAssembly wird nicht unterstützt).
+            </div>
+            <CodeBlock code={starterCode} title="Code (nur Ansicht)" />
+            {fallbackOutput && (
+              <div className="mt-3">
+                <p className="text-xs font-medium text-slate-500 mb-1">Erwartete Ausgabe:</p>
+                <pre className="p-3 rounded-lg bg-slate-800 text-green-400 text-sm font-mono overflow-x-auto">{fallbackOutput}</pre>
+              </div>
+            )}
+            {!fallbackOutput && (
+              <p className="text-xs text-slate-400 mt-2 italic">Ausgabe nicht verfügbar.</p>
+            )}
+            {solution && (
+              <div className="mt-3">
+                <p className="text-sm font-medium text-slate-500 mb-1">Musterlösung:</p>
+                <pre className="p-4 rounded-lg bg-slate-800 text-green-400 text-sm font-mono overflow-x-auto">
+                  {solution}
+                </pre>
               </div>
             )}
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div>
+                <PythonEditor
+                  key={editorKey}
+                  defaultCode={starterCode}
+                  onRun={handleRun}
+                  onReset={handleReset}
+                  running={running}
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <PythonOutput
+                  stdout={stdout}
+                  stderr={stderr}
+                  error={error}
+                  executionTime={executionTime}
+                  status={status}
+                />
 
-        <div className="flex gap-2 mt-4">
-          {hints && hints.length > 0 && (
-            <button
-              onClick={() => setShowHint(!showHint)}
-              className="px-3 py-1.5 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md hover:bg-amber-100 transition-colors"
-            >
-              {showHint ? 'Hinweis ausblenden' : 'Hinweis anzeigen'}
-            </button>
-          )}
-          {solution && attempts >= 1 && (
-            <button
-              onClick={() => setShowSolution(!showSolution)}
-              className="px-3 py-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors"
-            >
-              {showSolution ? 'Lösung ausblenden' : 'Lösung anzeigen'}
-            </button>
-          )}
-        </div>
+                {passed !== null && (
+                  <div
+                    className={`rounded-lg p-3 text-sm ${
+                      passed
+                        ? 'bg-green-50 border border-green-200 text-green-800'
+                        : 'bg-red-50 border border-red-200 text-red-800'
+                    }`}
+                    role="status"
+                    data-testid="validation-result"
+                  >
+                    <span className="font-medium">
+                      {passed ? 'Bestanden!' : 'Noch nicht korrekt.'}
+                    </span>
+                    {validationMessage && (
+                      <p className="mt-1">{validationMessage}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
 
-        {showHint && hints && (
-          <div className="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-800">
-            {hints.map((hint, i) => (
-              <p key={i} className="mt-1 first:mt-0">{hint}</p>
-            ))}
-          </div>
-        )}
+            <div className="flex gap-2 mt-4">
+              {hints && hints.length > 0 && (
+                <button
+                  onClick={() => setShowHint(!showHint)}
+                  className="px-3 py-1.5 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md hover:bg-amber-100 transition-colors"
+                >
+                  {showHint ? 'Hinweis ausblenden' : 'Hinweis anzeigen'}
+                </button>
+              )}
+              {solution && attempts >= 1 && (
+                <button
+                  onClick={() => setShowSolution(!showSolution)}
+                  className="px-3 py-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors"
+                >
+                  {showSolution ? 'Lösung ausblenden' : 'Lösung anzeigen'}
+                </button>
+              )}
+            </div>
 
-        {showSolution && solution && (
-          <div className="mt-3">
-            <p className="text-sm font-medium text-slate-500 mb-1">Musterlösung:</p>
-            <pre className="p-4 rounded-lg bg-slate-800 text-green-400 text-sm font-mono overflow-x-auto">
-              {solution}
-            </pre>
-          </div>
+            {showHint && hints && (
+              <div className="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-800">
+                {hints.map((hint, i) => (
+                  <p key={i} className="mt-1 first:mt-0">{hint}</p>
+                ))}
+              </div>
+            )}
+
+            {showSolution && solution && (
+              <div className="mt-3">
+                <p className="text-sm font-medium text-slate-500 mb-1">Musterlösung:</p>
+                <pre className="p-4 rounded-lg bg-slate-800 text-green-400 text-sm font-mono overflow-x-auto">
+                  {solution}
+                </pre>
+              </div>
+            )}
+          </>
         )}
       </section>
     </ErrorBoundary>

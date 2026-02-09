@@ -3,6 +3,7 @@ import Lueckentext from '../components/common/Lueckentext'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import CodingExercise from '../components/exercises/CodingExercise'
 import PerformanceChart from '../components/visualizations/PerformanceChart'
+import VectorizationAnimator from '../components/visualizations/VectorizationAnimator'
 import { useChapterTracking } from '../hooks/useChapterTracking'
 import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
@@ -39,6 +40,16 @@ export default function WarumNumpy() {
             label="Listen vs. NumPy: Summe berechnen"
             benchmarks={benchmarks}
           />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Vektorisierung verstehen</h2>
+          <p className="text-slate-600 mb-3">
+            Der Schlüssel zur Performance: Eine Python-Schleife verarbeitet jedes Element einzeln.
+            NumPy wendet die Operation <strong>gleichzeitig</strong> auf alle Elemente an — das nennt man
+            Vektorisierung.
+          </p>
+          <VectorizationAnimator label="Schleife vs. Vektorisierung: arr * 2" />
         </section>
 
         {/* --- Übung 1: MultipleChoice — Listen vs. Arrays --- */}

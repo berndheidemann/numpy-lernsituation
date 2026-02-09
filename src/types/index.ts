@@ -14,6 +14,7 @@ export interface ChapterProgress {
   visited: boolean
   exercisesCompleted: number
   exercisesTotal: number
+  completedExerciseIds: string[]
 }
 
 /** Globaler Lernfortschritt */
@@ -34,7 +35,7 @@ export interface PythonResult {
 }
 
 /** Status der Pyodide-Umgebung */
-export type PyodideStatus = 'idle' | 'loading' | 'ready' | 'error'
+export type PyodideStatus = 'idle' | 'loading' | 'ready' | 'error' | 'unsupported'
 
 /** Coding-Übung Definition */
 export interface CodingExerciseDefinition {

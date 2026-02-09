@@ -70,6 +70,37 @@ test.describe('ReshapeManipulation — Übungen', () => {
     })
   })
 
+  // --- MultipleChoice — flatten vs. ravel ---
+  test.describe('MultipleChoice — flatten vs. ravel', () => {
+    test('Frage wird angezeigt', async ({ page }) => {
+      const mc = page.getByTestId('mc-exercise-flatten-vs-ravel')
+      await expect(mc).toBeVisible()
+      await expect(mc.locator('h3')).toContainText('Unterschied')
+    })
+
+    test('Richtige Antwort wird erkannt', async ({ page }) => {
+      const mc = page.getByTestId('mc-exercise-flatten-vs-ravel')
+      await mc.getByText('flatten() erzeugt eine Kopie').click()
+      await mc.getByRole('button', { name: /antwort prüfen/i }).click()
+      await expect(mc.getByTestId('mc-result')).toContainText('Richtig')
+    })
+  })
+
+  // --- ShapePredictor — concatenate vs. stack ---
+  test.describe('ShapePredictor — np.stack', () => {
+    test('Übung wird angezeigt', async ({ page }) => {
+      const sp = page.getByTestId('shape-predictor-concat-stack-shape')
+      await expect(sp).toBeVisible()
+    })
+
+    test('Korrekte Shape wird akzeptiert', async ({ page }) => {
+      const sp = page.getByTestId('shape-predictor-concat-stack-shape')
+      await sp.getByTestId('shape-input').fill('2, 3, 4')
+      await sp.getByRole('button', { name: /prüfen/i }).click()
+      await expect(sp.getByTestId('shape-result')).toContainText('Richtig')
+    })
+  })
+
   // --- CodingExercise ---
   test('CodingExercise ist sichtbar', async ({ page }) => {
     const coding = page.getByTestId('coding-exercise-reshape-coding')

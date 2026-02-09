@@ -15,7 +15,7 @@ test.describe('Progress Store (LocalStorage)', () => {
     expect(storageValue).not.toBeNull()
 
     const parsed = JSON.parse(storageValue!)
-    expect(parsed.version).toBe(1)
+    expect(parsed.version).toBe(2)
     expect(parsed.state.chapters['warum-numpy'].visited).toBe(true)
     expect(parsed.state.lastVisited).toBe('warum-numpy')
   })

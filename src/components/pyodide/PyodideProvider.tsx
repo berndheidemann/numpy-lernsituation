@@ -17,6 +17,18 @@ export const PyodideContext = createContext<PyodideContextValue | null>(null)
 
 const EXECUTION_TIMEOUT = 10_000
 
+function checkWasmSupport(): boolean {
+  try {
+    if (typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function') {
+      const module = new WebAssembly.Module(Uint8Array.of(0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00))
+      return module instanceof WebAssembly.Module
+    }
+  } catch {
+    // WebAssembly not available
+  }
+  return false
+}
+
 export default function PyodideProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<PyodideStatus>('idle')
   const workerRef = useRef<Worker | null>(null)
@@ -26,6 +38,12 @@ export default function PyodideProvider({ children }: { children: ReactNode }) {
     timer: ReturnType<typeof setTimeout>
   }>>(new Map())
   const idCounterRef = useRef(0)
+
+  useEffect(() => {
+    if (!checkWasmSupport()) {
+      setStatus('unsupported')
+    }
+  }, [])
 
   const createWorker = useCallback(() => {
     if (workerRef.current) return workerRef.current

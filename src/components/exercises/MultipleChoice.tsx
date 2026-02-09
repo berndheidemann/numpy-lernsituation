@@ -47,7 +47,7 @@ export default function MultipleChoice({
 
       <fieldset disabled={submitted}>
         <legend className="sr-only">{question}</legend>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" role="radiogroup">
           {options.map((option, index) => {
             let borderClass = 'border-slate-200'
             if (submitted && index === correctIndex) {
