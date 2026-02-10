@@ -5,6 +5,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let pyodide: any = null
+let initPromise: Promise<any> | null = null
 
 const MAX_OUTPUT_LENGTH = 10_000
 
@@ -22,21 +23,27 @@ function truncate(text: string): string {
 
 async function initPyodide() {
   if (pyodide) return pyodide
+  if (initPromise) return initPromise
 
-  self.postMessage({ type: 'status', status: 'loading' })
+  initPromise = (async () => {
+    self.postMessage({ type: 'status', status: 'loading' })
 
-  const { loadPyodide } = await import('https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.mjs')
-  pyodide = await loadPyodide({
-    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/',
-    packages: ['numpy'],
-  })
+    const { loadPyodide } = await import('https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.mjs')
+    pyodide = await loadPyodide({
+      indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/',
+      packages: ['numpy'],
+    })
 
-  self.postMessage({ type: 'status', status: 'ready' })
-  return pyodide
+    self.postMessage({ type: 'status', status: 'ready' })
+    return pyodide
+  })()
+
+  return initPromise
 }
 
 async function runCode(id: string, code: string) {
   const py = await initPyodide()
+  self.postMessage({ type: 'execution-started', id })
 
   const stdout: string[] = []
   const stderr: string[] = []
@@ -74,6 +81,7 @@ async function runCode(id: string, code: string) {
 
 async function runWithValidation(id: string, code: string, validationCode: string) {
   const py = await initPyodide()
+  self.postMessage({ type: 'execution-started', id })
 
   const stdout: string[] = []
   const stderr: string[] = []

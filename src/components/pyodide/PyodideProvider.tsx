@@ -61,6 +61,19 @@ export default function PyodideProvider({ children }: { children: ReactNode }) {
         return
       }
 
+      if (msg.type === 'execution-started') {
+        const pending = pendingRef.current.get(msg.id)
+        if (pending) {
+          // Start the execution timeout only now (after Pyodide is loaded)
+          pending.timer = setTimeout(() => {
+            pendingRef.current.delete(msg.id)
+            terminateAndRestart()
+            pending.reject(new Error('Timeout: Die Ausführung hat länger als 10 Sekunden gedauert. Mögliche Endlosschleife?'))
+          }, EXECUTION_TIMEOUT)
+        }
+        return
+      }
+
       if (msg.type === 'result' || msg.type === 'validation-result') {
         const pending = pendingRef.current.get(msg.id)
         if (pending) {
@@ -87,7 +100,7 @@ export default function PyodideProvider({ children }: { children: ReactNode }) {
     }
     // Reject all pending operations
     for (const [, pending] of pendingRef.current) {
-      clearTimeout(pending.timer)
+      if (pending.timer) clearTimeout(pending.timer)
       pending.reject(new Error('Worker wurde neu gestartet'))
     }
     pendingRef.current.clear()
@@ -109,13 +122,10 @@ export default function PyodideProvider({ children }: { children: ReactNode }) {
       const id = String(++idCounterRef.current)
       const messageWithId = { ...(message as Record<string, unknown>), id }
 
-      const timer = setTimeout(() => {
-        pendingRef.current.delete(id)
-        terminateAndRestart()
-        reject(new Error('Timeout: Die Ausführung hat länger als 10 Sekunden gedauert. Mögliche Endlosschleife?'))
-      }, EXECUTION_TIMEOUT)
-
-      pendingRef.current.set(id, { resolve, reject, timer })
+      // No timer yet — it starts when the worker sends 'execution-started'
+      // (after Pyodide is loaded). This prevents slow Pyodide init from
+      // triggering a false timeout on slower devices (e.g. Safari).
+      pendingRef.current.set(id, { resolve, reject, timer: undefined as unknown as ReturnType<typeof setTimeout> })
       worker.postMessage(messageWithId)
     })
   }, [createWorker, status, terminateAndRestart])
@@ -136,7 +146,7 @@ export default function PyodideProvider({ children }: { children: ReactNode }) {
         workerRef.current.terminate()
       }
       for (const [, pending] of pendingRef.current) {
-        clearTimeout(pending.timer)
+        if (pending.timer) clearTimeout(pending.timer)
       }
     }
   }, [])
