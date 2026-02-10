@@ -15,7 +15,7 @@ test.describe('Progress Store (LocalStorage)', () => {
     expect(storageValue).not.toBeNull()
 
     const parsed = JSON.parse(storageValue!)
-    expect(parsed.version).toBe(2)
+    expect(parsed.version).toBe(3)
     expect(parsed.state.chapters['warum-numpy'].visited).toBe(true)
     expect(parsed.state.lastVisited).toBe('warum-numpy')
   })
@@ -42,19 +42,19 @@ test.describe('Progress Store (LocalStorage)', () => {
   test('Manuell gesetzter Fortschritt wird beibehalten', async ({ page }) => {
     await page.goto('/')
 
-    // Set progress manually in localStorage
+    // Set progress manually in localStorage (v3 format with completedExerciseIds)
     await page.evaluate(() => {
       const progress = {
         state: {
           chapters: {
-            'warum-numpy': { id: 'warum-numpy', visited: true, exercisesCompleted: 2, exercisesTotal: 3 },
-            'array-grundlagen': { id: 'array-grundlagen', visited: false, exercisesCompleted: 0, exercisesTotal: 0 },
+            'warum-numpy': { id: 'warum-numpy', visited: true, exercisesCompleted: 2, exercisesTotal: 3, completedExerciseIds: ['ex1', 'ex2'] },
+            'array-grundlagen': { id: 'array-grundlagen', visited: false, exercisesCompleted: 0, exercisesTotal: 0, completedExerciseIds: [] },
           },
           totalExercisesCompleted: 2,
           badges: [],
           version: 1,
         },
-        version: 1,
+        version: 3,
       }
       localStorage.setItem('numpy-learning-progress', JSON.stringify(progress))
     })
@@ -68,6 +68,7 @@ test.describe('Progress Store (LocalStorage)', () => {
     })
 
     const parsed = JSON.parse(storageValue!)
+    // totalExercisesCompleted is now computed from completedExerciseIds
     expect(parsed.state.totalExercisesCompleted).toBe(2)
   })
 })

@@ -2,6 +2,7 @@ import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import BroadcastingAnimator from '../components/visualizations/BroadcastingAnimator'
+import BroadcastingPlayground from '../components/visualizations/BroadcastingPlayground'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import DragDropExercise from '../components/exercises/DragDropExercise'
@@ -155,6 +156,15 @@ print((rabatt * matrix).shape)  # (3, 4)`}
           expectedShape={[100, 8760]}
           explanation="(100, 8760) * (8760,): preise wird zu (1, 8760) aufgefüllt, dann auf (100, 8760) gestreckt."
         />
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Broadcasting-Playground</h2>
+          <p className="text-slate-600 mb-3">
+            Gib eigene Shapes ein und prüfe, ob sie kompatibel sind.
+            Die Tabelle zeigt Schritt für Schritt, wie NumPy die Regeln anwendet:
+          </p>
+          <BroadcastingPlayground label="Eigene Shapes testen" />
+        </section>
 
         {/* --- Übung 3: Multiple Choice — Inkompatible Shapes --- */}
         <MultipleChoice

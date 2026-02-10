@@ -3,6 +3,7 @@ import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import IndexingHighlighter from '../components/visualizations/IndexingHighlighter'
+import ViewCopyVisualizer from '../components/visualizations/ViewCopyVisualizer'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import DragDropExercise from '../components/exercises/DragDropExercise'
@@ -179,6 +180,16 @@ print(data[::2, ::2])  # [[0, 2], [8, 10]]`}
             ':]',
           ]}
         />
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">View vs. Copy interaktiv</h2>
+          <p className="text-slate-600 mb-3">
+            Slicing erzeugt einen <strong>View</strong> — das Ergebnis zeigt auf denselben Speicher
+            wie das Original. Fancy/Boolean Indexing erzeugt eine <strong>Kopie</strong>.
+            Teste den Unterschied, indem du einen Wert änderst:
+          </p>
+          <ViewCopyVisualizer label="Auswirkung von Änderungen: View vs. Copy" />
+        </section>
 
         {/* --- Übung 4: Multiple Choice — View oder Kopie? --- */}
         <MultipleChoice

@@ -3,6 +3,7 @@ import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import ScatterPlot from '../components/visualizations/ScatterPlot'
+import BoxPlotVisualizer from '../components/visualizations/BoxPlotVisualizer'
 import DragDropExercise from '../components/exercises/DragDropExercise'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import MultipleChoice from '../components/exercises/MultipleChoice'
@@ -206,6 +207,20 @@ print("Ausreißer:", verbrauch[ausreisser])`}
             ')\n\n# Interquartilsabstand\niqr = q3 - q1',
           ]}
         />
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Verteilung verstehen: Boxplot & Histogramm</h2>
+          <p className="text-slate-600 mb-3">
+            Ein <strong>Boxplot</strong> zeigt Median, Quartile und Ausreißer auf einen Blick.
+            Das <strong>Histogramm</strong> darüber zeigt die Häufigkeitsverteilung derselben Daten.
+            Bewege die Maus über die Kennzahlen, um sie im Diagramm hervorzuheben:
+          </p>
+          <BoxPlotVisualizer
+            data={[12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 30, 35, 55, 8, 10, 17, 19, 22, 26, 31, 9, 11, 16, 20, 23, 29]}
+            label="Tagesverbrauch (kWh) — 30 Messwerte"
+            unit="kWh"
+          />
+        </section>
 
         {/* --- Übung 5: CodingExercise — Ausreißer-Erkennung --- */}
         <CodingExercise

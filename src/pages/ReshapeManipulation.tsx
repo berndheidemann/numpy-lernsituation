@@ -4,6 +4,7 @@ import Lueckentext from '../components/common/Lueckentext'
 import ShapeTransformer from '../components/visualizations/ShapeTransformer'
 
 import TransposeVisualizer from '../components/visualizations/TransposeVisualizer'
+import ConcatStackVisualizer from '../components/visualizations/ConcatStackVisualizer'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import CodingExercise from '../components/exercises/CodingExercise'
@@ -154,6 +155,16 @@ print(np.stack([a, b], axis=0).shape)        # (2, 2, 2)`}
           ]}
           correctIndex={1}
         />
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Concatenate vs. Stack interaktiv</h2>
+          <p className="text-slate-600 mb-3">
+            <code className="text-sm bg-slate-100 px-1 rounded">concatenate</code> verlängert eine bestehende Achse,{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">stack</code> erzeugt eine neue.
+            Wähle die Operation, um den Unterschied zu sehen:
+          </p>
+          <ConcatStackVisualizer label="Concatenate vs. Stack" />
+        </section>
 
         {/* --- Übung 5: ShapePredictor — concatenate vs. stack --- */}
         <ShapePredictor

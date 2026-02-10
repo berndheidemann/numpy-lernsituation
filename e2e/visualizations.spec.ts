@@ -164,35 +164,207 @@ test.describe('ShapeTransformer', () => {
   })
 })
 
-// ── MemoryLayoutViewer (on ReshapeManipulation page) ──
+// ── DtypeComparison (on ArrayGrundlagen page) ──
 
-test.describe('MemoryLayoutViewer', () => {
+test.describe('DtypeComparison', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#/array-grundlagen')
+  })
+
+  test('renders with dtype bars and element count selector', async ({ page }) => {
+    const viz = page.getByTestId('dtype-comparison')
+    await expect(viz).toBeVisible()
+    // Should show dtype labels
+    await expect(viz).toContainText('int8')
+    await expect(viz).toContainText('float64')
+  })
+
+  test('clicking element count changes displayed values', async ({ page }) => {
+    const viz = page.getByTestId('dtype-comparison')
+    // Click on 10 elements button (smallest)
+    await viz.getByRole('button', { name: /10 Elemente/ }).click()
+    // int8 with 10 elements = 10 B
+    await expect(viz).toContainText('10 B')
+  })
+
+  test('shows SmartEnergy context hint', async ({ page }) => {
+    const viz = page.getByTestId('dtype-comparison')
+    await expect(viz).toContainText(/SmartEnergy|float32|float64/)
+  })
+})
+
+// ── ViewCopyVisualizer (on IndexingSlicing page) ──
+
+test.describe('ViewCopyVisualizer', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#/indexing-slicing')
+  })
+
+  test('renders with View and Copy toggle buttons', async ({ page }) => {
+    const viz = page.getByTestId('view-copy-visualizer')
+    await expect(viz).toBeVisible()
+    await expect(viz.getByRole('button', { name: /View/ })).toBeVisible()
+    await expect(viz.getByRole('button', { name: /Copy/ })).toBeVisible()
+  })
+
+  test('shows mutation button', async ({ page }) => {
+    const viz = page.getByTestId('view-copy-visualizer')
+    await expect(viz.getByRole('button', { name: /99/ })).toBeVisible()
+  })
+
+  test('switching to Copy mode updates description', async ({ page }) => {
+    const viz = page.getByTestId('view-copy-visualizer')
+    await viz.getByRole('button', { name: /Copy/ }).click()
+    await expect(viz).toContainText(/Kopie|Fancy Indexing/)
+  })
+
+  test('clicking mutation button changes displayed values', async ({ page }) => {
+    const viz = page.getByTestId('view-copy-visualizer')
+    await viz.getByRole('button', { name: /99/ }).click()
+    // After mutation, 99 should appear in the visualization
+    await expect(viz).toContainText('99')
+  })
+})
+
+// ── BooleanMaskCombiner (on ArrayOperationen page) ──
+
+test.describe('BooleanMaskCombiner', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#/array-operationen')
+  })
+
+  test('renders with threshold sliders and operator buttons', async ({ page }) => {
+    const viz = page.getByTestId('boolean-mask-combiner')
+    await expect(viz).toBeVisible()
+    await expect(viz.getByRole('button', { name: /UND/ })).toBeVisible()
+    await expect(viz.getByRole('button', { name: /ODER/ })).toBeVisible()
+    await expect(viz.getByRole('button', { name: /NICHT/ })).toBeVisible()
+  })
+
+  test('shows mask rows and filtered result', async ({ page }) => {
+    const viz = page.getByTestId('boolean-mask-combiner')
+    await expect(viz).toContainText('Maske A')
+    await expect(viz).toContainText('Maske B')
+    await expect(viz).toContainText(/Ergebnis/)
+  })
+
+  test('switching operator updates combined mask expression', async ({ page }) => {
+    const viz = page.getByTestId('boolean-mask-combiner')
+    await viz.getByRole('button', { name: /ODER/ }).click()
+    await expect(viz).toContainText('|')
+  })
+
+  test('changing slider updates mask values', async ({ page }) => {
+    const viz = page.getByTestId('boolean-mask-combiner')
+    const slider = viz.getByRole('slider').first()
+    // Change the slider value
+    await slider.fill('25')
+    // The mask expression should reflect the new threshold
+    await expect(viz).toContainText('arr > 25')
+  })
+})
+
+// ── BroadcastingPlayground (on Broadcasting page) ──
+
+test.describe('BroadcastingPlayground', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#/broadcasting')
+  })
+
+  test('renders with shape input fields', async ({ page }) => {
+    const viz = page.getByTestId('broadcasting-playground')
+    await expect(viz).toBeVisible()
+    const inputs = viz.getByRole('textbox')
+    await expect(inputs).toHaveCount(2)
+  })
+
+  test('shows compatibility result for default shapes', async ({ page }) => {
+    const viz = page.getByTestId('broadcasting-playground')
+    await expect(viz).toContainText(/Kompatibel/)
+  })
+
+  test('shows step-by-step table', async ({ page }) => {
+    const viz = page.getByTestId('broadcasting-playground')
+    await expect(viz.getByRole('table')).toBeVisible()
+    await expect(viz).toContainText('Shape A')
+    await expect(viz).toContainText('Shape B')
+    await expect(viz).toContainText('Ergebnis')
+  })
+
+  test('entering incompatible shapes shows error', async ({ page }) => {
+    const viz = page.getByTestId('broadcasting-playground')
+    const inputs = viz.getByRole('textbox')
+    await inputs.first().fill('3, 4')
+    await inputs.last().fill('3')
+    await expect(viz).toContainText(/Inkompatibel|Fehler/)
+  })
+})
+
+// ── ConcatStackVisualizer (on ReshapeManipulation page) ──
+
+test.describe('ConcatStackVisualizer', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/#/reshape-manipulation')
   })
 
-  test('renders with C and F order buttons', async ({ page }) => {
-    const viewer = page.getByTestId('memory-layout-viewer')
-    await expect(viewer).toBeVisible()
-    await expect(page.getByTestId('order-c')).toBeVisible()
-    await expect(page.getByTestId('order-f')).toBeVisible()
+  test('renders with operation buttons', async ({ page }) => {
+    const viz = page.getByTestId('concat-stack-visualizer')
+    await expect(viz).toBeVisible()
+    await expect(viz.getByRole('button', { name: /concatenate\(axis=0\)/ })).toBeVisible()
+    await expect(viz.getByRole('button', { name: /concatenate\(axis=1\)/ })).toBeVisible()
+    await expect(viz.getByRole('button', { name: /stack\(axis=0\)/ })).toBeVisible()
   })
 
-  test('C-Order button is initially active', async ({ page }) => {
-    const cButton = page.getByTestId('order-c')
-    // Active button has bg-blue-600 class
-    await expect(cButton).toHaveClass(/bg-blue-600/)
+  test('shows input and result arrays', async ({ page }) => {
+    const viz = page.getByTestId('concat-stack-visualizer')
+    await expect(viz).toContainText(/Eingabe/)
+    await expect(viz).toContainText(/Ergebnis/)
   })
 
-  test('switching to F-Order updates the label', async ({ page }) => {
-    await page.getByTestId('order-f').click()
-    const viewer = page.getByTestId('memory-layout-viewer')
-    await expect(viewer).toContainText('Column-Major: Spalte für Spalte')
+  test('switching to stack mode shows new dimension', async ({ page }) => {
+    const viz = page.getByTestId('concat-stack-visualizer')
+    await viz.getByRole('button', { name: /stack\(axis=0\)/ }).click()
+    // Stack creates a new axis, so result shape should be (2, 2, 3)
+    await expect(viz).toContainText(/2, 2, 3/)
   })
 
-  test('shows logical array and memory strip', async ({ page }) => {
-    const viewer = page.getByTestId('memory-layout-viewer')
-    await expect(viewer).toContainText('Logisches Array')
-    await expect(viewer).toContainText('Speicher')
+  test('switching to concat axis=1 changes result shape', async ({ page }) => {
+    const viz = page.getByTestId('concat-stack-visualizer')
+    await viz.getByRole('button', { name: /concatenate\(axis=1\)/ }).click()
+    // Concatenating (2,3) + (2,3) along axis=1 gives (2,6)
+    await expect(viz).toContainText(/2, 6/)
+  })
+})
+
+// ── BoxPlotVisualizer (on StatistischeAuswertung page) ──
+
+test.describe('BoxPlotVisualizer', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#/statistische-auswertung')
+  })
+
+  test('renders with histogram and stats table', async ({ page }) => {
+    const viz = page.getByTestId('boxplot-visualizer')
+    await expect(viz).toBeVisible()
+    // Should show statistical labels
+    await expect(viz).toContainText('Median')
+    await expect(viz).toContainText('Q1')
+    await expect(viz).toContainText('Q3')
+  })
+
+  test('shows minimum and maximum values', async ({ page }) => {
+    const viz = page.getByTestId('boxplot-visualizer')
+    await expect(viz).toContainText('Minimum')
+    await expect(viz).toContainText('Maximum')
+  })
+
+  test('displays outlier information', async ({ page }) => {
+    const viz = page.getByTestId('boxplot-visualizer')
+    await expect(viz).toContainText(/Ausreißer/)
+  })
+
+  test('shows standard deviation', async ({ page }) => {
+    const viz = page.getByTestId('boxplot-visualizer')
+    await expect(viz).toContainText('Std.-Abw.')
   })
 })

@@ -3,6 +3,7 @@ import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import AxisAggregationVisualizer from '../components/visualizations/AxisAggregationVisualizer'
+import BooleanMaskCombiner from '../components/visualizations/BooleanMaskCombiner'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import ShapePredictor from '../components/exercises/ShapePredictor'
@@ -102,6 +103,20 @@ print(verbrauch[mittel])  # [22 15 18]
 # Negation mit ~
 niedrig = ~(verbrauch > 15)
 print(verbrauch[niedrig])  # [8 15 5]`}
+          />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Boolean-Masken interaktiv kombinieren</h2>
+          <p className="text-slate-600 mb-3">
+            Probiere aus, wie <code className="text-sm bg-slate-100 px-1 rounded">&</code>,{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">|</code> und{' '}
+            <code className="text-sm bg-slate-100 px-1 rounded">~</code> auf Boolean-Masken wirken.
+            Verschiebe die Schwellenwerte und beobachte, welche Werte übrig bleiben:
+          </p>
+          <BooleanMaskCombiner
+            values={[8, 22, 15, 30, 5, 18, 42, 12]}
+            label="Masken-Kombinator"
           />
         </section>
 

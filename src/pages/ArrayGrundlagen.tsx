@@ -7,6 +7,7 @@ import ArrayFillExercise from '../components/exercises/ArrayFillExercise'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import CodingExercise from '../components/exercises/CodingExercise'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
+import DtypeComparison from '../components/visualizations/DtypeComparison'
 import { useChapterTracking } from '../hooks/useChapterTracking'
 import { useExerciseTracking } from '../hooks/useExerciseTracking'
 
@@ -68,6 +69,15 @@ print(verbrauch.ndim)    # 2 — zweidimensional
 print(verbrauch.size)    # 120 — 5 × 24 Elemente
 print(verbrauch.dtype)   # float64`}
           />
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-800 mb-3">Datentypen und Speicherbedarf</h2>
+          <p className="text-slate-600 mb-3">
+            Der <strong>Dtype</strong> bestimmt, wie viel Speicher jedes Element belegt.
+            Bei großen Datensätzen kann die Wahl des richtigen Datentyps den Speicherbedarf halbieren:
+          </p>
+          <DtypeComparison label="Speicherbedarf pro Datentyp" />
         </section>
 
         {/* --- Übung 1: Multiple Choice --- */}

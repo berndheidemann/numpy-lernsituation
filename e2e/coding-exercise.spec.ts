@@ -53,13 +53,20 @@ test.describe('CodingExercise', () => {
 
     const exercise = page.getByTestId('coding-exercise-warum-numpy-1')
 
-    // Click run
+    // The starter code has placeholders, so click "Lösung anzeigen" first
+    // We need to run the code once first to make the solution button available
     await exercise.getByRole('button', { name: /ausführen/i }).click()
 
-    // Should show loading state
-    await expect(exercise.locator('span', { hasText: /läuft|wird geladen/i }).first()).toBeVisible({ timeout: 5_000 })
+    // Wait for some output (error or loading)
+    await expect(exercise.getByTestId('python-output')).not.toContainText('Klicke auf', { timeout: 90_000 })
 
-    // Wait for output (Pyodide download + execution)
+    // Now show solution and run again
+    const solutionBtn = exercise.getByRole('button', { name: /lösung anzeigen/i })
+    await expect(solutionBtn).toBeVisible({ timeout: 5_000 })
+    await solutionBtn.click()
+    await exercise.getByRole('button', { name: /ausführen/i }).click()
+
+    // Wait for output
     await expect(exercise.getByText('Array:')).toBeVisible({ timeout: 90_000 })
     await expect(exercise.getByText('Summe: 55')).toBeVisible()
 
