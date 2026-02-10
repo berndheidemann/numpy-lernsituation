@@ -91,11 +91,11 @@ export default function WarumNumpy() {
           starterCode={`import numpy as np
 
 # Erstelle ein Array mit den Werten 1 bis 10
-zahlen = np.arange(1, 11)
+zahlen = # Nutze np.arange() mit passenden Parametern
 print("Array:", zahlen)
 
-# Berechne die Summe
-summe = np.sum(zahlen)
+# Berechne die Summe aller Elemente
+summe = # Nutze np.sum()
 print("Summe:", summe)`}
           solution={`import numpy as np
 

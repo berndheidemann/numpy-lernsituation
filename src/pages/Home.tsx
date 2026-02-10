@@ -24,13 +24,25 @@ export default function Home() {
     <div className="min-h-screen">
       <Navigation />
       <main id="main-content" className="max-w-5xl mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            NumPy Lernplattform
-          </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Lerne Array-basierte Datenverarbeitung mit NumPy — interaktiv, mit Live-Coding im Browser.
-            Alle Beispiele basieren auf dem Szenario der <strong>SmartEnergy GmbH</strong>.
+        <div className="relative rounded-2xl overflow-hidden mb-12">
+          <img
+            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"
+            alt="Data Analytics Dashboard"
+            className="w-full h-64 md:h-80 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-slate-900/40 flex items-center">
+            <div className="px-8 md:px-12 max-w-2xl">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                NumPy Lernplattform
+              </h1>
+              <p className="text-base md:text-lg text-slate-200">
+                Lerne Array-basierte Datenverarbeitung mit NumPy — interaktiv, mit Live-Coding im Browser.
+                Alle Beispiele basieren auf dem Szenario der <strong className="text-white">SmartEnergy GmbH</strong>.
+              </p>
+            </div>
+          </div>
+          <p className="absolute bottom-2 right-3 text-[10px] text-white/50">
+            Photo by Luke Chesser on Unsplash
           </p>
         </div>
 
