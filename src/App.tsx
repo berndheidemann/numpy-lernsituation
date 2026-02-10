@@ -44,7 +44,7 @@ export default function App() {
       <footer className="border-t border-slate-200 bg-slate-50 mt-12 py-6 px-4 text-center text-xs text-slate-500">
         <p>
           Diese Seite ist Teil einer schulischen Lernsituation im Bildungsgang
-          Fachinformatiker/in &ndash; Anwendungsentwicklung am Schulzentrum Utbremen, Bremen.
+          Fachinformatiker/in für Daten- und Prozessanalyse am Schulzentrum Utbremen, Bremen.
         </p>
         <p className="mt-1">
           Verantwortlich im Sinne des &sect;&nbsp;5 DDG ist das Schulzentrum Utbremen.
