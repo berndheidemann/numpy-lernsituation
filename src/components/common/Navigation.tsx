@@ -7,8 +7,8 @@ const navItems = [
   { path: '/array-grundlagen', label: '2. Grundlagen', chapterId: 'array-grundlagen' },
   { path: '/indexing-slicing', label: '3. Indexing', chapterId: 'indexing-slicing' },
   { path: '/array-operationen', label: '4. Operationen', chapterId: 'array-operationen' },
-  { path: '/broadcasting', label: '5. Broadcasting', chapterId: 'broadcasting' },
-  { path: '/reshape-manipulation', label: '6. Reshape', chapterId: 'reshape-manipulation' },
+  { path: '/reshape-manipulation', label: '5. Reshape', chapterId: 'reshape-manipulation' },
+  { path: '/broadcasting', label: '6. Broadcasting', chapterId: 'broadcasting' },
   { path: '/statistische-auswertung', label: '7. Statistik', chapterId: 'statistische-auswertung' },
   { path: '/praxisprojekt', label: '8. Praxis', chapterId: 'praxisprojekt' },
 ]

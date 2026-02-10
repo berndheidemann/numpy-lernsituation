@@ -212,8 +212,8 @@ assert verbrauch.shape == (4, 7), f"Shape sollte (4, 7) sein, ist aber {verbrauc
 assert verbrauch.dtype == np.float64, f"Dtype sollte float64 sein, ist aber {verbrauch.dtype}"
 print("Korrekt! Dein Array hat die richtige Shape und den richtigen Dtype.")`}
           hints={[
-            'Nutze np.random.uniform(low, high, size=(zeilen, spalten)).',
-            'low=5, high=25, size=(4, 7) für 4 Haushalte × 7 Tage.',
+            'Nutze np.random.uniform(low, high, size=...). Schau dir den CodeBlock „Array-Erstellung" oben an — dort findest du die Syntax.',
+            'Überlege: Wie viele Zeilen (Haushalte) und wie viele Spalten (Tage) braucht das Array? Der size-Parameter erwartet ein Tupel.',
           ]}
         />
       </main>

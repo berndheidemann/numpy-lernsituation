@@ -142,8 +142,8 @@ assert np.allclose(kosten_zeit, verbrauch * preise_zeitvariabel), "kosten_zeit s
 assert np.allclose(gesamt_zeit, np.sum(kosten_zeit, axis=1)), "gesamt_zeit sollte Summe über axis=1 sein"
 print("Teil 1 korrekt — Broadcasting erfolgreich!")`}
           hints={[
-            'Broadcasting: verbrauch (10, 168) * preise_zeitvariabel (168,) → kosten (10, 168).',
-            'Gesamtkosten: np.sum(kosten_zeit, axis=1) gibt einen Wert pro Haushalt.',
+            'Verbrauch und Preise müssen elementweise multipliziert werden. Welcher Operator verknüpft zwei Arrays? NumPy kümmert sich um die Shape-Anpassung.',
+            'Für die Gesamtkosten pro Haushalt musst du die Stundenwerte jeder Zeile aufsummieren. Welcher axis-Parameter bedeutet „über die Spalten"?',
           ]}
         />
 
@@ -234,9 +234,9 @@ assert profitiert.dtype == bool, "profitiert sollte ein Boolean-Array sein"
 assert np.array_equal(profitiert, expected_diff > 0), "profitiert sollte differenz > 0 sein"
 print("Tarifvergleich korrekt!")`}
           hints={[
-            'Flatrate-Kosten: np.sum(verbrauch * preis_flatrate, axis=1).',
-            'Differenz: gesamt_zeit - gesamt_flat — positiv bedeutet, der zeitvariable Tarif ist teurer.',
-            'profitiert = differenz > 0 ergibt ein Boolean-Array.',
+            'Flatrate-Kosten funktionieren genauso wie die zeitvariablen Kosten — nur mit einem festen Preis statt einem Array. Multipliziere und summiere pro Haushalt.',
+            'Die Differenz zeigt, wer beim Wechsel spart. Überlege: Welche Reihenfolge der Subtraktion ergibt positive Werte für Haushalte, die profitieren?',
+            'Ein Vergleich eines Arrays mit 0 ergibt ein Boolean-Array — genau das, was du für „profitiert" brauchst.',
           ]}
         />
 
@@ -287,9 +287,9 @@ expected_stunde = np.argmax(expected_profil)
 assert spitzen_stunde == expected_stunde, f"spitzen_stunde sollte {expected_stunde} sein"
 print("Tagesmuster-Analyse korrekt!")`}
           hints={[
-            'Reshape: verbrauch.reshape(10, 7, 24) — 168 Stunden = 7 × 24.',
-            'Mittelwert über 2 Achsen: np.mean(tagesmatrix, axis=(0, 1)).',
-            'Spitzenstunde: np.argmax(tagesprofil).',
+            'Die 168 Stunden lassen sich in Tage und Stunden aufteilen. Wie viele Tage sind 168 Stunden? Das ergibt die mittlere Dimension.',
+            'Für das durchschnittliche Tagesprofil musst du über Haushalte UND Tage mitteln, sodass nur die 24 Stunden übrig bleiben. np.mean kann auch über mehrere Achsen gleichzeitig aggregieren.',
+            'Welche NumPy-Funktion gibt den INDEX des größten Wertes zurück? (Tipp: Nicht den Wert selbst!)',
           ]}
         />
       </main>

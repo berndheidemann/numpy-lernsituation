@@ -368,3 +368,41 @@ test.describe('BoxPlotVisualizer', () => {
     await expect(viz).toContainText('Std.-Abw.')
   })
 })
+
+// ── BroadcastingValueVisualizer (on Broadcasting page) ──
+
+test.describe('BroadcastingValueVisualizer', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#/broadcasting')
+  })
+
+  test('renders with data-testid', async ({ page }) => {
+    const viz = page.getByTestId('broadcasting-value-visualizer')
+    await expect(viz).toBeVisible()
+  })
+
+  test('shows 3 preset buttons', async ({ page }) => {
+    await expect(page.getByTestId('preset-0')).toBeVisible()
+    await expect(page.getByTestId('preset-1')).toBeVisible()
+    await expect(page.getByTestId('preset-2')).toBeVisible()
+  })
+
+  test('operation toggle switches between + and ×', async ({ page }) => {
+    const addBtn = page.getByTestId('op-add')
+    const mulBtn = page.getByTestId('op-mul')
+    await expect(addBtn).toBeVisible()
+    await expect(mulBtn).toBeVisible()
+    // Click multiply
+    await mulBtn.click()
+    await expect(mulBtn).toHaveClass(/bg-blue-600/)
+  })
+
+  test('switching preset changes displayed values', async ({ page }) => {
+    const viz = page.getByTestId('broadcasting-value-visualizer')
+    // Default preset 0: "(3,) + Skalar"
+    await expect(viz).toContainText('1D-Array + Skalar')
+    // Switch to preset 2
+    await page.getByTestId('preset-2').click()
+    await expect(viz).toContainText('Zeilenvektor wird auf jede Zeile addiert')
+  })
+})

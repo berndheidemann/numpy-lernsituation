@@ -30,7 +30,7 @@ export default function ReshapeManipulation() {
     <div className="min-h-screen">
       <Navigation />
       <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 6: Reshape & Manipulation</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 5: Reshape & Manipulation</h1>
         <p className="text-slate-600 mb-6">
           Mit <code className="text-sm bg-slate-100 px-1 rounded">reshape</code>,{' '}
           <code className="text-sm bg-slate-100 px-1 rounded">transpose</code> und{' '}
@@ -217,8 +217,8 @@ expected_mittel = np.mean(stunden.reshape(7, 24), axis=1)
 assert np.allclose(tages_mittel, expected_mittel), "tages_mittel sollte der Mittelwert pro Tag sein (axis=1)"
 print("Reshape und Aggregation korrekt!")`}
           hints={[
-            'Reshape: stunden.reshape(7, 24) oder stunden.reshape(-1, 24).',
-            'Mittelwert pro Tag: np.mean(woche, axis=1) — axis=1 bedeutet „über die Spalten (Stunden)".',
+            'Wie viele Tage hat eine Woche, und wie viele Stunden hat ein Tag? Das ergibt die zwei Dimensionen für reshape. Du kannst auch -1 als Platzhalter nutzen.',
+            'Für den Tagesmittel brauchst du np.mean mit dem richtigen axis. Überlege: Welche Achse enthält die Stunden, die du mitteln willst?',
           ]}
         />
       </main>

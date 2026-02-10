@@ -274,9 +274,9 @@ expected_out = verbrauch[(verbrauch > obergrenze) | (verbrauch < untergrenze)]
 assert np.array_equal(ausreisser, expected_out), f"ausreisser sollte {expected_out} sein"
 print("Ausreißer-Erkennung korrekt!")`}
           hints={[
-            'Mittelwert: np.mean(verbrauch), Std: np.std(verbrauch)',
-            'Grenzen: mittel + 2 * std (oben), mittel - 2 * std (unten)',
-            'Ausreißer: verbrauch[(verbrauch > obergrenze) | (verbrauch < untergrenze)] — | für logisches ODER',
+            'Schau in den CodeBlock „Statistische Kennzahlen" oben — welche zwei Funktionen brauchst du für Mittelwert und Streuung?',
+            'Die Grenzen liegen symmetrisch um den Mittelwert: Mittel plus/minus ein Vielfaches der Standardabweichung.',
+            'Ausreißer sind Werte, die OBERHALB der Obergrenze ODER UNTERHALB der Untergrenze liegen. Welchen logischen Operator nutzt du bei Arrays statt „or"?',
           ]}
         />
 
@@ -391,8 +391,8 @@ assert abs(r - expected_r) < 0.001, f"r sollte {expected_r:.3f} sein, ist aber {
 assert r < -0.9, "Der r-Wert sollte stark negativ sein (< -0.9)"
 print("Korrelation korrekt berechnet!")`}
           hints={[
-            'np.corrcoef(x, y) gibt eine 2×2 Matrix zurück.',
-            'Der r-Wert steht in korr_matrix[0, 1] (oder korr_matrix[1, 0]).',
+            'Schau im CodeBlock „Korrelation und Ausreißer" oben nach: Welche Funktion berechnet die Korrelationsmatrix?',
+            'Die Korrelationsmatrix ist 2×2. Die Diagonale enthält immer 1.0 (Korrelation mit sich selbst). Wo steht der interessante Wert?',
           ]}
         />
       </main>

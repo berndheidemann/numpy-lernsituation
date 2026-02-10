@@ -273,9 +273,9 @@ expected_mittel = np.array([12, 15, 18, 14, 11, 20])
 assert np.array_equal(mittlerer_bereich, expected_mittel), f"mittlerer_bereich sollte {expected_mittel} sein"
 print("Filter und Aggregation korrekt!")`}
           hints={[
-            'Spitzenwerte: verbrauch[verbrauch > 20]',
-            'Durchschnitt: np.mean(hoher_verbrauch)',
-            'Mittlerer Bereich: verbrauch[(verbrauch >= 10) & (verbrauch <= 20)] — Klammern um jede Bedingung!',
+            'Schau dir den CodeBlock zu „Boolean-Filterung" oben an: Wie filtert man Werte mit einer Bedingung direkt als Index?',
+            'Du hast bereits ein gefiltertes Array — welche NumPy-Funktion berechnet den Mittelwert?',
+            'Für den mittleren Bereich brauchst du ZWEI Bedingungen. Welchen Operator nutzt man bei Arrays statt „and"? Denk an die Klammern!',
           ]}
         />
 
@@ -330,9 +330,9 @@ expected_tag = np.argmax(np.sum(kosten, axis=0))
 assert teuerster_tag == expected_tag, f"teuerster_tag sollte {expected_tag} sein, ist aber {teuerster_tag}"
 print("Stromkosten korrekt berechnet!")`}
           hints={[
-            'Kosten: verbrauch * preise — Broadcasting streckt preise (7,) auf (4, 7).',
-            'Gesamtkosten pro Haushalt: np.sum(kosten, axis=1).',
-            'Teuerster Tag: np.argmax(...) gibt den Index des größten Wertes zurück.',
+            'Kosten = Verbrauch × Preis. Welcher Operator multipliziert zwei Arrays elementweise? NumPy kümmert sich um die Shape-Anpassung.',
+            'Um pro Haushalt (Zeile) zu summieren, brauchst du np.sum mit dem richtigen axis-Parameter. Welche Achse steht für die Spalten?',
+            'Den Tipp „argmax" findest du im blauen Hinweis-Kasten weiter oben. Was gibt diese Funktion zurück?',
           ]}
         />
       </main>

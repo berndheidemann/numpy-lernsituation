@@ -7,8 +7,8 @@ const chapters = [
   { path: '/array-grundlagen', chapterId: 'array-grundlagen', title: '2. Array-Grundlagen', description: 'Arrays erstellen, Dimensionen, Shape, Dtype' },
   { path: '/indexing-slicing', chapterId: 'indexing-slicing', title: '3. Indexing & Slicing', description: 'Elemente auswählen, Teilbereiche, Masken' },
   { path: '/array-operationen', chapterId: 'array-operationen', title: '4. Array-Operationen', description: 'Elementweise Operationen, Aggregationen, Vergleiche' },
-  { path: '/broadcasting', chapterId: 'broadcasting', title: '5. Broadcasting', description: 'Automatische Dimensionserweiterung, Shape-Kompatibilität' },
-  { path: '/reshape-manipulation', chapterId: 'reshape-manipulation', title: '6. Reshape & Manipulation', description: 'Form verändern, Transponieren, Verketten' },
+  { path: '/reshape-manipulation', chapterId: 'reshape-manipulation', title: '5. Reshape & Manipulation', description: 'Form verändern, Transponieren, Verketten' },
+  { path: '/broadcasting', chapterId: 'broadcasting', title: '6. Broadcasting', description: 'Automatische Dimensionserweiterung, Shape-Kompatibilität' },
   { path: '/statistische-auswertung', chapterId: 'statistische-auswertung', title: '7. Statistische Auswertung', description: 'Mittelwert, Standardabweichung, Korrelation, Ausreißer' },
   { path: '/praxisprojekt', chapterId: 'praxisprojekt', title: '8. Praxisprojekt', description: 'Vollständige Datenanalyse: Tarifvergleich bei SmartEnergy' },
 ]

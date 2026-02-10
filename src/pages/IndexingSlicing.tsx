@@ -374,9 +374,9 @@ expected_hohe = np.array([50, 44, 55, 48, 60, 52, 65])
 assert np.array_equal(np.sort(hohe_werte), np.sort(expected_hohe)), "hohe_werte sollte alle Werte > 40 enthalten"
 print("Alle Extraktionen korrekt!")`}
           hints={[
-            'Einzelwert: verbrauch[zeile, spalte] — Haushalt 2 = Zeile 2, Stunde 3 = Spalte 3.',
-            'Eine ganze Zeile: verbrauch[zeile] oder verbrauch[zeile, :].',
-            'Boolean Indexing: verbrauch[verbrauch > 40] filtert alle Werte, die die Bedingung erfüllen.',
+            'Für einen Einzelwert brauchst du zwei Indices: Zeile und Spalte. Denke daran, dass die Nummerierung bei 0 beginnt.',
+            'Um eine ganze Zeile zu bekommen, reicht ein einziger Index. Schau im CodeBlock „Indexing-Arten" nach, wie das geht.',
+            'Für Boolean Indexing verwendest du eine Bedingung direkt als Index — schau dir den Abschnitt „Boolean Indexing im Detail" oben an.',
           ]}
         />
       </main>

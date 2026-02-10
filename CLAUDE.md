@@ -93,8 +93,8 @@ Die Plattform nutzt die Möglichkeiten von React für folgende Lernformate. **In
 2. **Array-Grundlagen** — Erstellen von Arrays (`array`, `zeros`, `ones`, `arange`, `linspace`), Dimensionen (`ndim`), Form (`shape`), Datentypen (`dtype`), Größe (`size`)
 3. **Indexing & Slicing** — Basic Indexing, Slicing mit Start:Stop:Step, Fancy Indexing (Integer-Arrays), Boolean Indexing (Masken), Indexing bei mehrdimensionalen Arrays
 4. **Array-Operationen** — Elementweise Operationen (+, -, *, /), Universelle Funktionen (ufuncs), Vergleichsoperationen, Aggregationsfunktionen (`sum`, `mean`, `min`, `max`)
-5. **Broadcasting** — Broadcasting-Regeln, Shape-Kompatibilität, typische Anwendungsfälle, häufige Fehler
-6. **Reshape & Manipulation** — `reshape`, `ravel`/`flatten`, `transpose`, `concatenate`, `stack`, `split`, Achsen-Konzept (`axis`)
+5. **Reshape & Manipulation** — `reshape`, `ravel`/`flatten`, `transpose`, `concatenate`, `stack`, `split`, Achsen-Konzept (`axis`)
+6. **Broadcasting** — Broadcasting-Regeln, Shape-Kompatibilität, typische Anwendungsfälle, häufige Fehler
 7. **Statistische Auswertung** — `mean`, `median`, `std`, `var`, `percentile`, `corrcoef`, Achsen-basierte Aggregation, Anwendung auf reale Datensätze
 8. **Praxisprojekt: Datenanalyse** — Zusammenführung aller Konzepte an einem durchgängigen Analyse-Szenario
 
@@ -152,8 +152,8 @@ numpy_lernsituation/
 │   │   ├── ArrayGrundlagen.tsx        # Kapitel 2: Arrays erstellen
 │   │   ├── IndexingSlicing.tsx        # Kapitel 3: Zugriff auf Elemente
 │   │   ├── ArrayOperationen.tsx       # Kapitel 4: Rechnen mit Arrays
-│   │   ├── Broadcasting.tsx           # Kapitel 5: Broadcasting-Regeln
-│   │   ├── ReshapeManipulation.tsx    # Kapitel 6: Form verändern
+│   │   ├── ReshapeManipulation.tsx    # Kapitel 5: Form verändern
+│   │   ├── Broadcasting.tsx           # Kapitel 6: Broadcasting-Regeln
 │   │   ├── StatistischeAuswertung.tsx # Kapitel 7: Statistik
 │   │   └── Praxisprojekt.tsx          # Kapitel 8: Alles zusammen
 │   ├── hooks/
@@ -186,8 +186,8 @@ Alle Aufgaben und Beispiele beziehen sich auf ein durchgängiges Szenario: **„
   - **Kap. 2 (Array-Grundlagen):** Verbrauchsarray erstellen und inspizieren (Shape: 1000 Haushalte × 8760 Stunden)
   - **Kap. 3 (Indexing):** Verbrauch eines bestimmten Haushalts, eines bestimmten Tages, oder aller Haushalte zu einer Uhrzeit extrahieren
   - **Kap. 4 (Operationen):** Kosten berechnen (Verbrauch × Preis), Durchschnittsverbrauch, Peak-Erkennung
-  - **Kap. 5 (Broadcasting):** Stundenpreise (1D) auf alle Haushalte (2D) anwenden
-  - **Kap. 6 (Reshape):** Stundendaten in Tagesmatrizen (365 × 24) umstrukturieren
+  - **Kap. 5 (Reshape):** Stundendaten in Tagesmatrizen (365 × 24) umstrukturieren
+  - **Kap. 6 (Broadcasting):** Stundenpreise (1D) auf alle Haushalte (2D) anwenden
   - **Kap. 7 (Statistik):** Durchschnittsverbrauch pro Tarif, Korrelation Temperatur–Verbrauch, Ausreißer-Erkennung
   - **Kap. 8 (Praxisprojekt):** Vollständige Analyse: Welche Haushalte profitieren von einem Tarifwechsel?
 

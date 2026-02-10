@@ -158,7 +158,40 @@ np.max(data, axis=0)  # Schüler tragen ein: [40, 50, 60], Shape: (3,)
 
 ---
 
-## Kapitel 5: Broadcasting
+## Kapitel 5: Reshape & Manipulation
+
+### 1. Shape-Transformer (Interaktive Animation) [Level 1 — Reproduktion] [MVP]
+Ein 1D-Array (z.B. `np.arange(12)`) wird als flache Reihe angezeigt. Schüler wählen per Dropdown verschiedene Reshape-Operationen (`reshape(3, 4)`, `reshape(4, 3)`, `reshape(2, 2, 3)`). Die Elemente „fliegen" animiert in die neue Anordnung. Parallel wird die flache Speicherreihenfolge angezeigt, um zu zeigen, dass sich am Speicher nichts ändert.
+**SmartEnergy-Beispiel:** Stundendaten eines Tages (24 Werte) → `reshape(4, 6)` (6-Stunden-Blöcke) oder `reshape(8, 3)` (3-Stunden-Blöcke).
+
+### 2. Reshape-Shape-Rechner [Level 1 — Reproduktion] [MVP]
+Ein Array mit bekannter Shape wird angezeigt. Schüler geben Reshape-Parameter ein (inkl. `-1` für automatische Berechnung) und sagen die Ergebnis-Shape vorher. Bei `-1` müssen sie den automatisch berechneten Wert angeben.
+**SmartEnergy-Beispiele:**
+- `verbrauch.shape = (8760,)` → `reshape(365, ?)` → Schüler: 24
+- `verbrauch.shape = (1000, 8760)` → `reshape(1000, 365, -1)` → Schüler: -1 = 24
+- `verbrauch.shape = (12,)` → `reshape(5, -1)` → Fehler! (12 nicht durch 5 teilbar)
+
+### 3. Transpose-Visualizer [Level 1 — Reproduktion] [MVP]
+SVG-Animation: Eine Matrix wird angezeigt. Per Klick auf „Transpose" kippen Zeilen und Spalten animiert um die Diagonale. Shape-Anzeige aktualisiert sich live. Erweitert: Bei 3D-Arrays verschiedene `axes`-Permutationen ausprobieren.
+**SmartEnergy-Beispiel:** `verbrauch` Shape (Haushalte, Stunden) → `verbrauch.T` Shape (Stunden, Haushalte). „Wann ist Transpose sinnvoll? Wenn man statt ‚pro Haushalt alle Stunden' → ‚pro Stunde alle Haushalte' analysieren will."
+
+### 4. Stundendaten zu Tagesmatrix (Live-Coding) [Level 2 — Transfer] [MVP]
+Schüler transformieren Stundendaten in verschiedene Strukturen mit reshape, und kombinieren Arrays mit concatenate/stack.
+**SmartEnergy-Aufgabe:**
+1. „Transformiere `stunden_verbrauch` (Shape: 8760,) in eine Tagesmatrix (Shape: 365, 24)."
+2. „Kombiniere die Tagesmatrizen von zwei Haushalten zu einem Array (Shape: 2, 365, 24) mit `np.stack`."
+3. „Füge die Daten eines 366. Tages (Schalttag) mit `np.concatenate` an."
+
+### 5. Memory-Layout-Explorer [Level 2 — Transfer] [Erweiterung]
+Interaktive Komponente: Zeigt ein 2D-Array sowohl als logisches Gitter als auch als linearen Speicher. Verbindungslinien zeigen die Zuordnung. Toggle zwischen C-Order (Row-Major) und Fortran-Order (Column-Major). Schüler können Elemente anklicken und sehen die Speicheradresse.
+**SmartEnergy-Beispiel:** Verbrauch 3 Haushalte × 4 Tage. In C-Order liegen die Tage eines Haushalts hintereinander (gut für „pro Haushalt"-Zugriffe). In F-Order liegen alle Haushalte eines Tages hintereinander (gut für „pro Tag"-Zugriffe).
+
+### 6. Flatten-Ravel-Differenzierung [Level 2 — Transfer] [Erweiterung]
+Quiz mit Codebeispielen: Schüler entscheiden, ob `flatten()` oder `ravel()` verwendet werden sollte, basierend auf dem Kontext (brauche ich eine Kopie oder reicht ein View?). Visuell wird der Unterschied mit der View-Animation gezeigt.
+
+---
+
+## Kapitel 6: Broadcasting
 
 ### 1. Broadcasting-Animator [Level 1 — Reproduktion] [MVP]
 Interaktive SVG-Animation: Zwei Arrays mit unterschiedlichen Shapes werden angezeigt. Per Klick auf „Broadcasting starten" wird Schritt für Schritt gezeigt:
@@ -193,39 +226,6 @@ tarif = np.array([0.25, 0.30, 0.35])    # (3,) — 3 Tarife
 kosten = verbrauch * tarif               # ValueError! 8760 ≠ 3
 # Lösung: tarif.reshape(3, 1, 1) für Broadcasting über neue Achsen
 ```
-
----
-
-## Kapitel 6: Reshape & Manipulation
-
-### 1. Shape-Transformer (Interaktive Animation) [Level 1 — Reproduktion] [MVP]
-Ein 1D-Array (z.B. `np.arange(12)`) wird als flache Reihe angezeigt. Schüler wählen per Dropdown verschiedene Reshape-Operationen (`reshape(3, 4)`, `reshape(4, 3)`, `reshape(2, 2, 3)`). Die Elemente „fliegen" animiert in die neue Anordnung. Parallel wird die flache Speicherreihenfolge angezeigt, um zu zeigen, dass sich am Speicher nichts ändert.
-**SmartEnergy-Beispiel:** Stundendaten eines Tages (24 Werte) → `reshape(4, 6)` (6-Stunden-Blöcke) oder `reshape(8, 3)` (3-Stunden-Blöcke).
-
-### 2. Reshape-Shape-Rechner [Level 1 — Reproduktion] [MVP]
-Ein Array mit bekannter Shape wird angezeigt. Schüler geben Reshape-Parameter ein (inkl. `-1` für automatische Berechnung) und sagen die Ergebnis-Shape vorher. Bei `-1` müssen sie den automatisch berechneten Wert angeben.
-**SmartEnergy-Beispiele:**
-- `verbrauch.shape = (8760,)` → `reshape(365, ?)` → Schüler: 24
-- `verbrauch.shape = (1000, 8760)` → `reshape(1000, 365, -1)` → Schüler: -1 = 24
-- `verbrauch.shape = (12,)` → `reshape(5, -1)` → Fehler! (12 nicht durch 5 teilbar)
-
-### 3. Transpose-Visualizer [Level 1 — Reproduktion] [MVP]
-SVG-Animation: Eine Matrix wird angezeigt. Per Klick auf „Transpose" kippen Zeilen und Spalten animiert um die Diagonale. Shape-Anzeige aktualisiert sich live. Erweitert: Bei 3D-Arrays verschiedene `axes`-Permutationen ausprobieren.
-**SmartEnergy-Beispiel:** `verbrauch` Shape (Haushalte, Stunden) → `verbrauch.T` Shape (Stunden, Haushalte). „Wann ist Transpose sinnvoll? Wenn man statt ‚pro Haushalt alle Stunden' → ‚pro Stunde alle Haushalte' analysieren will."
-
-### 4. Stundendaten zu Tagesmatrix (Live-Coding) [Level 2 — Transfer] [MVP]
-Schüler transformieren Stundendaten in verschiedene Strukturen mit reshape, und kombinieren Arrays mit concatenate/stack.
-**SmartEnergy-Aufgabe:**
-1. „Transformiere `stunden_verbrauch` (Shape: 8760,) in eine Tagesmatrix (Shape: 365, 24)."
-2. „Kombiniere die Tagesmatrizen von zwei Haushalten zu einem Array (Shape: 2, 365, 24) mit `np.stack`."
-3. „Füge die Daten eines 366. Tages (Schalttag) mit `np.concatenate` an."
-
-### 5. Memory-Layout-Explorer [Level 2 — Transfer] [Erweiterung]
-Interaktive Komponente: Zeigt ein 2D-Array sowohl als logisches Gitter als auch als linearen Speicher. Verbindungslinien zeigen die Zuordnung. Toggle zwischen C-Order (Row-Major) und Fortran-Order (Column-Major). Schüler können Elemente anklicken und sehen die Speicheradresse.
-**SmartEnergy-Beispiel:** Verbrauch 3 Haushalte × 4 Tage. In C-Order liegen die Tage eines Haushalts hintereinander (gut für „pro Haushalt"-Zugriffe). In F-Order liegen alle Haushalte eines Tages hintereinander (gut für „pro Tag"-Zugriffe).
-
-### 6. Flatten-Ravel-Differenzierung [Level 2 — Transfer] [Erweiterung]
-Quiz mit Codebeispielen: Schüler entscheiden, ob `flatten()` oder `ravel()` verwendet werden sollte, basierend auf dem Kontext (brauche ich eine Kopie oder reicht ein View?). Visuell wird der Unterschied mit der View-Animation gezeigt.
 
 ---
 

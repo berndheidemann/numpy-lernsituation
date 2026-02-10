@@ -52,7 +52,7 @@ const CHAPTER_BADGES: BadgeDefinition[] = [
   {
     id: 'chapter-broadcasting',
     title: 'Broadcasting',
-    description: 'Alle Übungen in Kapitel 5 abgeschlossen',
+    description: 'Alle Übungen in Kapitel 6 abgeschlossen',
     icon: '📡',
     check: (s) => {
       const ch = s.chapters['broadcasting']
@@ -62,7 +62,7 @@ const CHAPTER_BADGES: BadgeDefinition[] = [
   {
     id: 'chapter-reshape-manipulation',
     title: 'Reshape & Manipulation',
-    description: 'Alle Übungen in Kapitel 6 abgeschlossen',
+    description: 'Alle Übungen in Kapitel 5 abgeschlossen',
     icon: '🔄',
     check: (s) => {
       const ch = s.chapters['reshape-manipulation']

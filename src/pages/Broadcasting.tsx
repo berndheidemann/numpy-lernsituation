@@ -1,8 +1,8 @@
 import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
-import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import BroadcastingAnimator from '../components/visualizations/BroadcastingAnimator'
 import BroadcastingPlayground from '../components/visualizations/BroadcastingPlayground'
+import BroadcastingValueVisualizer from '../components/visualizations/BroadcastingValueVisualizer'
 import ShapePredictor from '../components/exercises/ShapePredictor'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import DragDropExercise from '../components/exercises/DragDropExercise'
@@ -18,7 +18,7 @@ export default function Broadcasting() {
     <div className="min-h-screen">
       <Navigation />
       <main id="main-content" className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 5: Broadcasting</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-4">Kapitel 6: Broadcasting</h1>
         <p className="text-slate-600 mb-6">
           Broadcasting (automatische Formanpassung) erlaubt es, Arrays mit unterschiedlichen Shapes zu
           kombinieren — ohne die Daten manuell zu duplizieren. Im SmartEnergy-Szenario:
@@ -64,45 +64,7 @@ export default function Broadcasting() {
           />
         </section>
 
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-800 mb-3">Broadcasting mit Werten</h2>
-          <p className="text-slate-600 mb-3">
-            So sieht Broadcasting auf Daten-Ebene aus: Die Stundenpreise (1D) werden auf alle
-            Haushalte (2D) angewendet — jede Zeile wird mit denselben Preisen multipliziert:
-          </p>
-          <div className="grid gap-4 md:grid-cols-3 items-start">
-            <div>
-              <ArrayVisualizer
-                data={[[12, 8, 16], [22, 18, 10], [9, 14, 20], [15, 11, 7]]}
-                label="Verbrauch (4×3)"
-                colorMode="heatmap"
-                compact
-              />
-            </div>
-            <div className="flex flex-col items-center justify-center pt-8">
-              <span className="text-2xl text-slate-400 font-bold">×</span>
-              <ArrayVisualizer
-                data={[0.28, 0.35, 0.30]}
-                label="Preise (3,) → wird gestreckt"
-                colorMode="uniform"
-                compact
-              />
-            </div>
-            <div>
-              <ArrayVisualizer
-                data={[
-                  [3.36, 2.80, 4.80],
-                  [6.16, 6.30, 3.00],
-                  [2.52, 4.90, 6.00],
-                  [4.20, 3.85, 2.10],
-                ]}
-                label="= Kosten (4×3)"
-                colorMode="heatmap"
-                compact
-              />
-            </div>
-          </div>
-        </section>
+        <BroadcastingValueVisualizer />
 
         {/* --- Theorie: Broadcasting-Regeln im Code --- */}
         <section className="mb-8">
@@ -247,8 +209,8 @@ assert np.allclose(kosten, expected), "kosten sollte verbrauch * preise sein (Br
 assert np.allclose(kosten_pro_haushalt, np.sum(kosten, axis=1)), "kosten_pro_haushalt sollte die Summe über axis=1 sein"
 print("Broadcasting korrekt angewendet!")`}
           hints={[
-            'Broadcasting: verbrauch * preise — NumPy erkennt automatisch, dass preise (24,) zu (1, 24) und dann zu (5, 24) gestreckt werden muss.',
-            'Summe über Spalten: np.sum(kosten, axis=1) summiert jede Zeile → ein Wert pro Haushalt.',
+            'Verbrauch und Preise müssen elementweise multipliziert werden. Welcher Operator verknüpft zwei Arrays? NumPy kümmert sich um die Shape-Anpassung.',
+            'Für die Gesamtkosten pro Haushalt musst du die Stundenwerte jeder Zeile aufsummieren. Welcher axis-Parameter bedeutet „über die Spalten"?',
           ]}
         />
       </main>
