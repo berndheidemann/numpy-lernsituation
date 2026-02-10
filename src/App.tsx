@@ -41,6 +41,27 @@ export default function App() {
         </Routes>
       </Suspense>
       <BadgeNotification />
+      <footer className="border-t border-slate-200 bg-slate-50 mt-12 py-6 px-4 text-center text-xs text-slate-500">
+        <p>
+          Diese Seite ist Teil einer schulischen Lernsituation im Bildungsgang
+          Fachinformatiker/in &ndash; Anwendungsentwicklung am Schulzentrum Utbremen, Bremen.
+        </p>
+        <p className="mt-1">
+          Verantwortlich im Sinne des &sect;&nbsp;5 DDG ist das Schulzentrum Utbremen.
+          Vollständiges Impressum:{' '}
+          <a
+            href="https://www.szut.de/impressum.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            www.szut.de/impressum.html
+          </a>
+        </p>
+        <p className="mt-1">
+          Diese Seite dient ausschließlich der schulischen Ausbildung und verfolgt keine kommerziellen Zwecke.
+        </p>
+      </footer>
     </ErrorBoundary>
   )
 }
