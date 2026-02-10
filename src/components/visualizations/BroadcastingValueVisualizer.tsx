@@ -213,12 +213,6 @@ export default function BroadcastingValueVisualizer() {
     return `a[${hoverR},${hoverC}] ${opSymbol} b[${hoverR},${hoverC}] = ${va} ${opSymbol} ${vb} = ${vr}`
   }, [hoverR, hoverC, broadA, broadB, result, op])
 
-  // Source cell highlight for A and B
-  const highlightAR = hoverR !== null ? hoverR % aRows : null
-  const highlightAC = hoverC !== null ? hoverC % aCols : null
-  const highlightBR = hoverR !== null ? hoverR % bRows : null
-  const highlightBC = hoverC !== null ? hoverC % bCols : null
-
   const shapeA =
     aRows === 1 && aCols === 1
       ? 'Skalar'
@@ -297,22 +291,22 @@ export default function BroadcastingValueVisualizer() {
           {/* Grid layout */}
           <div className="flex flex-wrap items-center justify-center gap-4">
             <CellGrid
-              data={preset.a}
+              data={broadA}
               originalRows={aRows}
               originalCols={aCols}
-              highlightR={highlightAR}
-              highlightC={highlightAC}
+              highlightR={hoverR}
+              highlightC={hoverC}
               label={`Array A ${shapeA}`}
             />
 
             <span className="text-2xl font-bold text-slate-400">{op}</span>
 
             <CellGrid
-              data={preset.b}
+              data={broadB}
               originalRows={bRows}
               originalCols={bCols}
-              highlightR={highlightBR}
-              highlightC={highlightBC}
+              highlightR={hoverR}
+              highlightC={hoverC}
               label={`Array B ${shapeB}`}
             />
 
