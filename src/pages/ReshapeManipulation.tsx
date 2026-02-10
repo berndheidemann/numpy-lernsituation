@@ -2,7 +2,7 @@ import Navigation from '../components/common/Navigation'
 import CodeBlock from '../components/common/CodeBlock'
 import Lueckentext from '../components/common/Lueckentext'
 import ShapeTransformer from '../components/visualizations/ShapeTransformer'
-import MemoryLayoutViewer from '../components/visualizations/MemoryLayoutViewer'
+
 import TransposeVisualizer from '../components/visualizations/TransposeVisualizer'
 import MultipleChoice from '../components/exercises/MultipleChoice'
 import ShapePredictor from '../components/exercises/ShapePredictor'
@@ -20,11 +20,6 @@ const reshapeShapes: [number, number][] = [
   [12, 1],
 ]
 
-const memoryData = [
-  [10, 20, 30],
-  [40, 50, 60],
-  [70, 80, 90],
-]
 
 export default function ReshapeManipulation() {
   useChapterTracking('reshape-manipulation')
@@ -53,20 +48,6 @@ export default function ReshapeManipulation() {
             values={reshapeValues}
             shapes={reshapeShapes}
             label="np.arange(1, 13).reshape(...)"
-          />
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-800 mb-3">Speicherordnung: C vs. Fortran</h2>
-          <p className="text-slate-600 mb-3">
-            NumPy speichert Arrays standardmäßig in <strong>C-Order</strong> (Zeile für Zeile).
-            Mit <code className="text-sm bg-slate-100 px-1 rounded">order='F'</code> wird{' '}
-            <strong>Fortran-Order</strong> (Spalte für Spalte) verwendet. Bewege die Maus über
-            die Zellen, um die Zuordnung zwischen logischem Array und Speicher zu sehen:
-          </p>
-          <MemoryLayoutViewer
-            data={memoryData}
-            label="3×3 Array — Speicherlayout"
           />
         </section>
 

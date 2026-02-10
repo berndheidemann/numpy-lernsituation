@@ -52,6 +52,28 @@ function DraggableItem({ id, label, isPlaced }: { id: string; label: string; isP
   )
 }
 
+function PlacedItem({ id, label }: { id: string; label: string }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id })
+
+  const style = transform
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+    : undefined
+
+  return (
+    <button
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={`px-2 py-1 text-sm font-mono bg-white border border-slate-200 rounded cursor-grab active:cursor-grabbing transition-shadow ${
+        isDragging ? 'opacity-50 shadow-lg' : 'hover:shadow-md'
+      }`}
+    >
+      {label}
+    </button>
+  )
+}
+
 function DroppableZone({
   id,
   label,
@@ -87,9 +109,7 @@ function DroppableZone({
       <span className="text-sm text-slate-700 flex-1">{label}</span>
       <div className="min-w-[100px] text-right">
         {placedItem ? (
-          <span className="px-2 py-1 text-sm font-mono bg-white border border-slate-200 rounded">
-            {placedItem.label}
-          </span>
+          <PlacedItem id={placedItem.id} label={placedItem.label} />
         ) : (
           <span className="text-xs text-slate-400 italic">Hierher ziehen</span>
         )}
@@ -123,14 +143,29 @@ export default function DragDropExercise({
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     setActiveId(null)
     const { active, over } = event
-    if (!over) return
-
     const itemId = String(active.id)
-    const zoneId = String(over.id)
     const pair = pairs.find((p) => p.itemId === itemId)
     if (!pair) return
 
-    // Remove item from any previous zone
+    // Dropped outside any zone — return item to the pool
+    if (!over) {
+      setPlacements((prev) => {
+        const next = { ...prev }
+        for (const [key, val] of Object.entries(next)) {
+          if (val.id === itemId) delete next[key]
+        }
+        return next
+      })
+      if (submitted) {
+        setSubmitted(false)
+        setResults({})
+      }
+      return
+    }
+
+    const zoneId = String(over.id)
+
+    // Remove item from any previous zone, place in new zone
     setPlacements((prev) => {
       const next = { ...prev }
       for (const [key, val] of Object.entries(next)) {

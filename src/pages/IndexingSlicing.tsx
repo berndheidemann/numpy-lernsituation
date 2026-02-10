@@ -359,7 +359,7 @@ hohe_werte = verbrauch[verbrauch > 40]
 print("Hohe Werte:", hohe_werte)`}
           validationCode={`assert einzelwert == 48, f"einzelwert sollte 48 sein, ist aber {einzelwert}"
 assert np.array_equal(haushalt_0, np.array([10, 20, 30, 40, 50])), f"haushalt_0 sollte [10, 20, 30, 40, 50] sein"
-expected_hohe = np.array([40, 50, 44, 55, 48, 60, 52, 65])
+expected_hohe = np.array([50, 44, 55, 48, 60, 52, 65])
 assert np.array_equal(np.sort(hohe_werte), np.sort(expected_hohe)), "hohe_werte sollte alle Werte > 40 enthalten"
 print("Alle Extraktionen korrekt!")`}
           hints={[
